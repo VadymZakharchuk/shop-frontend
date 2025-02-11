@@ -25,7 +25,8 @@
 <script setup>
 import { useI18n } from "vue-i18n";
 import { categories } from "../../../config/categories.js";
-import {computed} from "vue";
+import {computed, ref} from "vue";
+import { getCategories } from '@/services/categories.service';
 import LangSwitcher from "@/components/ui/LangSwitcher.vue";
 import IconCart from "@/components/ui/icons/IconCart.vue";
 import IconUser from "@/components/ui/icons/IconUser.vue";
@@ -34,6 +35,12 @@ const { locale } = useI18n()
 const menuData = computed(() => {
   return categories[`${locale.value}`].map((item) => { item.name = item.name.toUpperCase(); return item; })
 })
+
+const rubrics = ref([])
+async function fetchCategories() {
+  rubrics.value = await getCategories()
+}
+fetchCategories()
 </script>
 
 <style scoped lang="scss">
