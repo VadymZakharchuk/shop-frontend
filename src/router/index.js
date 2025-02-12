@@ -3,8 +3,8 @@ import {createRouter, createWebHistory} from 'vue-router'
 import Home from "@/pages/Home.vue"
 import DefaultLayout from "@/layouts/DefaultLayout.vue";
 
-const SignIn = import('@/components/auth/SignIn.vue')
-const SignUpLayout  = import("@/layouts/SignUpLayout.vue")
+const SignIn = () => import('@/components/auth/SignIn.vue')
+const SignUpLayout  =() => import('@/layouts/SignUpLayout.vue')
 const Backpacks = () => import('@/pages/Backpacks.vue')
 const Cups = () => import('@/pages/Cups.vue')
 const Hoodies = () => import('@/pages/Hoodies.vue')
@@ -13,16 +13,16 @@ const Account = () => import('@/pages/Account.vue')
 
 const routes = [
   {
-    path: '/:locale',
+    path: '/',
     component: DefaultLayout,
     children: [
       {
-        path: '/uk',
+        path: '/',
         name: `home__uk`,
         component: Home,
       },
       {
-        path: '/en',
+        path: '/:locale',
         name: 'home__en',
         component: Home,
       },
