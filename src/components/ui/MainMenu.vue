@@ -24,7 +24,7 @@
 
 <script setup>
 import { useI18n } from "vue-i18n";
-import { categories } from "../../../config/categories.js";
+import { categories } from "@/config/categories.js";
 import {computed, ref} from "vue";
 import { getCategories } from '@/services/categories.service';
 import LangSwitcher from "@/components/ui/LangSwitcher.vue";
@@ -37,9 +37,7 @@ const menuData = computed(() => {
 })
 
 const rubrics = ref([])
-async function fetchCategories() {
-  rubrics.value = await getCategories()
-}
+async function fetchCategories() { rubrics.value = await getCategories() }
 fetchCategories()
 </script>
 
