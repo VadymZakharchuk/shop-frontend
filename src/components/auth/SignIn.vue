@@ -13,7 +13,7 @@
 
     <div class="sign-in__form">
       <Form
-        v-slot="{ errors }"
+        v-slot="{ errors, meta }"
         :validation-schema="schema"
         class="space-y-6"
         @submit="onSubmit"
@@ -27,7 +27,8 @@
             <Field 
               name="phone" 
               type="text" 
-              class="sign-in__form-phone-field" 
+              class="sign-in__form-phone-field"
+              placeholder="Phone number"
               :class="{ 'is-invalid': errors.phone }"
             />
             <div class="invalid-feedback">
@@ -65,6 +66,8 @@
         <div>
           <button
             type="submit"
+            :disabled="!meta.valid"
+            :class="{'bg-indigo-600': meta.valid, 'bg-gray-200': !meta.valid}"
             class="sign-in__form__btn-submit"
           >
             Sign in
@@ -84,10 +87,14 @@
 </template>
 
 <script setup>
-import { Form, Field } from 'vee-validate';
+import {Field, Form} from 'vee-validate';
+import {useUserStore} from "@/store/user.js";
 import * as Yup from 'yup';
-import { useI18n } from "vue-i18n";
+import {useI18n} from "vue-i18n";
+import lzjs from 'lzjs'
+import {login} from "@/services/users.service.js";
 
+const userStore = useUserStore();
 const { t } = useI18n({
   messages: {
     en: {
@@ -96,27 +103,36 @@ const { t } = useI18n({
       password: "Password",
       forgot: "Forgot password?",
       noAccount: "Have no account?",
-      register: "Register now"
+      register: "Register now",
+      requiredField: "This field is required",
+      noValidPhone: "Phone number is not valid",
+      passwordMin: "Password must be at least 6 characters",
     },
     uk: {
       title: "Увійдіть у свій обліковий запис",
-      phoneNo: "Ваш номер телефону",
+      phoneNo: "Ваш номер телефону (XXX) XXX-XX-XX",
       password: "Пароль",
       forgot: "Забули пароль?",
       noAccount: "Не маєте облікового запису?",
-      register: "Зареєструйтесь зараз"
+      register: "Зареєструйтесь зараз",
+      requiredField: "Це поле обов'язкове",
+      noValidPhone: "Не валідний номер телефону",
+      passwordMin: "Пароль повинен містити принаймні 6 символів",
     }
   }
 });
 
-const phoneRegExp = /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/
+const phoneRegExp = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s./0-9]*$/g
 const schema = Yup.object({
-  phone: Yup.string().matches(phoneRegExp, 'Phone number is not valid'),
-  password: Yup.string().required().min(6, 'Password must be at least 6 characters'),
+  phone: Yup.string().matches(phoneRegExp, t('noValidPhone')).required(t('requiredField')),
+  password: Yup.string().required(t('requiredField')).min(6, t('passwordMin')),
 });
 
-const onSubmit = (values) => {
-  alert('SUCCESS!! :-)\n\n' + JSON.stringify(values, null, 4));
+const onSubmit = async (values) => {
+  values.phone = '38' + values.phone.replace(/\D/g,'');
+  values.password = lzjs.compressToBase64(values.password);
+  console.log('values', values);
+  userStore.token = await login(values)
 }
 </script>
 
@@ -141,7 +157,7 @@ const onSubmit = (values) => {
       @apply block text-sm/6 font-medium text-gray-900;
     }
     &-phone-field {
-      @apply block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1;
+      @apply block w-full rounded-md bg-gray-100 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1;
       @apply outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2;
       @apply focus:outline-indigo-600 sm:text-sm/6;
     }
@@ -152,12 +168,12 @@ const onSubmit = (values) => {
       @apply font-semibold text-indigo-600 hover:text-indigo-500;
     }
     &-password-field {
-      @apply block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1;
+      @apply block w-full rounded-md bg-gray-100 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1;
       @apply outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2;
       @apply focus:outline-indigo-600 sm:text-sm/6;
     }
     &__btn-submit {
-      @apply flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm/6 font-semibold text-white;
+      @apply flex w-full justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold text-white;
       @apply shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2;
       @apply focus-visible:outline-indigo-600;
     }
@@ -168,5 +184,9 @@ const onSubmit = (values) => {
       }
     }
   }
+}
+.invalid-feedback{
+  @apply text-red-500 text-sm/6;
+  @apply mt-1;
 }
 </style>
