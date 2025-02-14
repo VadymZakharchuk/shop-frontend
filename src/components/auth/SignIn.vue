@@ -44,10 +44,12 @@
               class="sign-in__form-password-label"
             >{{ t('password') }}</label>
             <div class="text-sm">
-              <a
-                href="#"
+              <RouterLink
+                :to="forgotPassword"
                 class="sign-in__form-password-forgot"
-              >{{ t('forgot') }}</a>
+              >
+                {{ t('forgot') }}
+              </RouterLink>
             </div>
           </div>
           <div class="mt-2">
@@ -87,14 +89,15 @@
 </template>
 
 <script setup>
-import {Field, Form} from 'vee-validate';
-import {useUserStore} from "@/store/user.js";
+import { Field, Form } from 'vee-validate';
+import { useUserStore } from "@/store/user.js";
 import * as Yup from 'yup';
-import {useI18n} from "vue-i18n";
+import { useI18n } from "vue-i18n";
 import Cookies from 'js-cookie';
 import xorCrypt from 'xor-crypt'
-import {login} from "@/services/users.service.js";
-import {useRouter} from "vue-router";
+import { login } from "@/services/users.service.js";
+import { useRouter } from "vue-router";
+import {computed} from "vue";
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -140,6 +143,10 @@ const onSubmit = async (values) => {
     await router.push(`/${locale.value}/cabinet`)
   }
 }
+
+const forgotPassword = computed(() => {
+  return locale.value === 'en' ? '/forgot-password' : '/zabuv-parol'
+})
 </script>
 
 <style lang="scss" scoped>

@@ -1,5 +1,7 @@
 <template>
-  <h1 class="text-black">Cabinet page</h1>
+  <div class="text-black">
+    <h1>Cabinet page</h1>
+  </div>
 </template>
 <script setup>
 

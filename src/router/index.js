@@ -4,12 +4,13 @@ import Home from "@/pages/Home.vue"
 import DefaultLayout from "@/layouts/DefaultLayout.vue";
 
 const SignIn = () => import('@/components/auth/SignIn.vue')
+const ForgotPassword = () => import('@/components/auth/ForgotPassword.vue')
 const SignUpLayout  =() => import('@/layouts/SignUpLayout.vue')
-const Backpacks = () => import('@/pages/Backpacks.vue')
-const Cups = () => import('@/pages/Cups.vue')
-const Hoodies = () => import('@/pages/Hoodies.vue')
-const Tshirts = () => import('@/pages/Tshirts.vue')
-const Cabinet = () => import('@/pages/Cabinet.vue')
+const StockBackpacks = () => import('@/pages/StockBackpacks.vue')
+const StockCups = () => import('@/pages/StockCups.vue')
+const StockHoodies = () => import('@/pages/StockHoodies.vue')
+const StockTshirts = () => import('@/pages/StockTshirts.vue')
+const UserCabinet = () => import('@/pages/UserCabinet.vue')
 
 const routes = [
   {
@@ -21,33 +22,61 @@ const routes = [
     ],
   },
   {
-    path: '/vkhid',
-    component: SignUpLayout,
-    children: [ { path: '', name: 'login__uk', component: SignIn }],
+    path: '/vkhid', component: SignUpLayout,
+    children: [{ path: '', name: 'login__uk', component: SignIn }],
   },
   {
-    path: '/login',
-    component: SignUpLayout,
-    children: [ { path: '', name: 'login__en', component: SignIn }],
+    path: '/login', component: SignUpLayout,
+    children: [{ path: '', name: 'login__en', component: SignIn }],
   },
-  { path: '/:locale/cabinet',
-    component: DefaultLayout,
-    children: [
-      {
-        path: '',
-        name: 'cabinet',
-        component: Cabinet,
-      }
-    ],
+  {
+    path: '/zabuv-parol', component: SignUpLayout,
+    children: [{ path: '', name: 'forgot__uk', component: ForgotPassword }],
   },
-  { path: '/uk/rukzaky', name: 'backpacks__uk', component: Backpacks },
-  { path: '/en/backpacks', name: 'backpacks__en', component: Backpacks },
-  { path: '/uk/chashky', name: 'cups__uk', component: Cups },
-  { path: '/en/cups', name: 'cups__en', component: Cups },
-  { path: '/uk/khudi', name: 'hoodies__uk', component: Hoodies },
-  { path: '/en/hoodies', name: 'hoodies__en', component: Hoodies },
-  { path: '/uk/futbolky', name: 'tshirts__uk', component: Tshirts },
-  { path: '/en/tshirts', name: 'tshirts__en', component: Tshirts },
+  {
+    path: '/forgot-password', component: SignUpLayout,
+    children: [{ path: '', name: 'forgot__en', component: ForgotPassword }],
+  },
+  {
+    path: '/kabinet', component: DefaultLayout,
+    children: [{ path: '', name: 'cabinet__uk', component: UserCabinet }],
+  },
+  {
+    path: '/cabinet', component: DefaultLayout,
+    children: [{ path: '', name: 'cabinet__en', component: UserCabinet }],
+  },
+  {
+    path: '/rukzaky', component: DefaultLayout,
+    children: [{ path: '', name: 'backpacks__uk', component: StockBackpacks }]
+  },
+  {
+    path: '/backpacks', component: DefaultLayout,
+    children: [{ path: '', name: 'backpacks__en', component: StockBackpacks }]
+  },
+  {
+    path: '/chashky', component: DefaultLayout,
+    children: [{ path: '', name: 'cups__uk', component: StockCups }]
+  },
+  {
+    path: '/cups', component: DefaultLayout,
+    children: [{ path: '', name: 'cups__en', component: StockCups}]
+  },
+  {
+    path: '/khudi', component: DefaultLayout,
+    children: [{path: '', name: 'hoodies__uk', component: StockHoodies}]
+  },
+  {
+    path: '/hoodies', component: DefaultLayout,
+    children: [{path: '', name: 'hoodies__en', component: StockHoodies}]
+  },
+  {
+    path: '/futbolky', component: DefaultLayout,
+    children: [{path: '', name: 'tshirts__uk', component: StockTshirts}]
+  },
+  {
+    path: '/tshirts', component: DefaultLayout,
+    children: [{path: '', name: 'tshirts__en', component: StockTshirts}]
+  },
 ]
 
 const index = createRouter({
