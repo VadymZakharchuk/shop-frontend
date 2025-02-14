@@ -15,7 +15,7 @@
     <div class="main-menu__list">
       <LangSwitcher />
       <IconCart class="menu-icon" />
-      <RouterLink :to="{ name: `account__${locale}` }">
+      <RouterLink :to="'/cabinet'">
         <IconUser class="menu-icon" />
       </RouterLink>
     </div>

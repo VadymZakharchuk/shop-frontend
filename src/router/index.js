@@ -9,33 +9,34 @@ const Backpacks = () => import('@/pages/Backpacks.vue')
 const Cups = () => import('@/pages/Cups.vue')
 const Hoodies = () => import('@/pages/Hoodies.vue')
 const Tshirts = () => import('@/pages/Tshirts.vue')
-const Account = () => import('@/pages/Account.vue')
+const Cabinet = () => import('@/pages/Cabinet.vue')
 
 const routes = [
   {
     path: '/',
     component: DefaultLayout,
     children: [
-      {
-        path: '/',
-        name: `home__uk`,
-        component: Home,
-      },
-      {
-        path: '/:locale',
-        name: 'home__en',
-        component: Home,
-      },
+      { path: '',  name: `home__uk`, component: Home },
+      { path: 'en',  name: `home__en`, component: Home },
     ],
   },
-  { path: '/:locale/login',
-    name: 'login',
+  {
+    path: '/vkhid',
     component: SignUpLayout,
+    children: [ { path: '', name: 'login__uk', component: SignIn }],
+  },
+  {
+    path: '/login',
+    component: SignUpLayout,
+    children: [ { path: '', name: 'login__en', component: SignIn }],
+  },
+  { path: '/:locale/cabinet',
+    component: DefaultLayout,
     children: [
       {
         path: '',
-        name: 'SignIn',
-        component: SignIn,
+        name: 'cabinet',
+        component: Cabinet,
       }
     ],
   },
@@ -47,9 +48,6 @@ const routes = [
   { path: '/en/hoodies', name: 'hoodies__en', component: Hoodies },
   { path: '/uk/futbolky', name: 'tshirts__uk', component: Tshirts },
   { path: '/en/tshirts', name: 'tshirts__en', component: Tshirts },
-  { path: '/uk/kabinet', name: 'account__uk', component: Account },
-  { path: '/en/account', name: 'account__en', component: Account },
-
 ]
 
 const index = createRouter({

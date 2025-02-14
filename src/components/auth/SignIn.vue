@@ -91,11 +91,14 @@ import {Field, Form} from 'vee-validate';
 import {useUserStore} from "@/store/user.js";
 import * as Yup from 'yup';
 import {useI18n} from "vue-i18n";
-import lzjs from 'lzjs'
+import Cookies from 'js-cookie';
+import xorCrypt from 'xor-crypt'
 import {login} from "@/services/users.service.js";
+import {useRouter} from "vue-router";
 
 const userStore = useUserStore();
-const { t } = useI18n({
+const router = useRouter();
+const { t, locale } = useI18n({
   messages: {
     en: {
       title: "Sign in to your account",
@@ -130,9 +133,12 @@ const schema = Yup.object({
 
 const onSubmit = async (values) => {
   values.phone = '38' + values.phone.replace(/\D/g,'');
-  values.password = lzjs.compressToBase64(values.password);
-  console.log('values', values);
+  values.password = xorCrypt(values.password,9);
   userStore.token = await login(values)
+  Cookies.set('token', userStore.token)
+  if (userStore.token) {
+    await router.push(`/${locale.value}/cabinet`)
+  }
 }
 </script>
 
