@@ -1,6 +1,6 @@
 import Api from './api/api'
 
-export const getCategories = async () => {
-  const response = await Api.get(`/categories`)
+export const getCategories = async (lang) => {
+  const response = await Api.get(`/categories`, { headers: { 'Accept-Language': lang }})
   return response.data
 }

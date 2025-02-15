@@ -25,7 +25,7 @@
 <script setup>
 import { useI18n } from "vue-i18n";
 import { categories } from "@/config/categories.js";
-import {computed, ref} from "vue";
+import {computed, ref } from "vue";
 import { getCategories } from '@/services/categories.service';
 import LangSwitcher from "@/components/ui/LangSwitcher.vue";
 import IconCart from "@/components/ui/icons/IconCart.vue";
@@ -37,7 +37,7 @@ const menuData = computed(() => {
 })
 
 const rubrics = ref([])
-async function fetchCategories() { rubrics.value = await getCategories() }
+async function fetchCategories() { rubrics.value = await getCategories(locale.value) }
 fetchCategories()
 </script>
 

@@ -19,8 +19,6 @@ const { locale } = useI18n()
 const route = useRoute()
 
 const routeLang = route.name.includes('uk') ? 'uk' : 'en'
-console.log('routeLang', routeLang, locale.value)
-
 localStorage.setItem('lang', routeLang);
 locale.value = routeLang;
 

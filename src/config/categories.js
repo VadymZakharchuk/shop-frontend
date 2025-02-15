@@ -2,37 +2,37 @@ export const categories = {
     uk: [
         {
             name: 'худі',
-            url: '/uk/khudi'
+            url: '/khudi'
         },
         {
             name: 'футболки',
-            url: '/uk/futbolky'
+            url: '/futbolky'
         },
         {
             name: 'чашки',
-            url: '/uk/chashky'
+            url: '/chashky'
         },
         {
             name: 'рюкзаки',
-            url: '/uk/rukzaky'
+            url: '/rukzaky'
         },
     ],
     en: [
         {
             name: 'hoodies',
-            url: '/en/hoodies',
+            url: '/hoodies',
         },
         {
             name: 'tshirts',
-            url: '/en/tshirts',
+            url: '/tshirts',
         },
         {
             name: 'cups',
-            url: '/en/cups',
+            url: '/cups',
         },
         {
             name: 'backpacks',
-            url: '/en/backpacks',
+            url: '/backpacks',
         },
     ]
 }

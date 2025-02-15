@@ -1,7 +1,7 @@
 <template>
   <div class="app-header">
     <div class="app-header__logo">
-      <RouterLink :to="'/'">
+      <RouterLink :to="homeLink">
         <img
           src="/img/logo.jpg"
           alt="logo"
@@ -22,8 +22,9 @@
 <script setup>
 import MainMenu from "@/components/ui/MainMenu.vue";
 import { useI18n } from "vue-i18n";
+import { computed } from "vue";
 
-const { t } = useI18n({
+const { t, locale } = useI18n({
   messages: {
     en: {
       title: "Store of things with a Ukrainian soul",
@@ -35,6 +36,9 @@ const { t } = useI18n({
     }
   }
 });
+const homeLink = computed(() => {
+  return locale.value === "uk" ? "/" : "/en";
+})
 </script>
 
 <style scoped lang="scss">

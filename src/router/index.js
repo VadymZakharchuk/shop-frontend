@@ -1,5 +1,5 @@
-import {createRouter, createWebHistory} from 'vue-router'
-
+import { createRouter, createWebHistory } from 'vue-router'
+import Cookies from 'js-cookie'
 import Home from "@/pages/Home.vue"
 import DefaultLayout from "@/layouts/DefaultLayout.vue";
 
@@ -79,8 +79,14 @@ const routes = [
   },
 ]
 
-const index = createRouter({
+const router = createRouter({
   history: createWebHistory(),
   routes,
 })
-export default index;
+router.beforeEach((to, from, next) => {
+  const lang = from.name?.includes('__uk') ? 'uk' : 'en'
+  const token = Cookies.get('auth-token')
+  if (to.name.startsWith('cabinet') && !token) next({ name: `login__${lang}` })
+  else next()
+})
+export default router;

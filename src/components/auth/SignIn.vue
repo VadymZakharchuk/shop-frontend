@@ -89,15 +89,15 @@
 </template>
 
 <script setup>
-import { Field, Form } from 'vee-validate';
-import { useUserStore } from "@/store/user.js";
+import { Field, Form } from 'vee-validate'
+import { useUserStore } from "@/store/user.js"
 import * as Yup from 'yup';
-import { useI18n } from "vue-i18n";
-import Cookies from 'js-cookie';
+import { useI18n } from "vue-i18n"
+import Cookies from 'js-cookie'
 import xorCrypt from 'xor-crypt'
-import { login } from "@/services/users.service.js";
-import { useRouter } from "vue-router";
-import {computed} from "vue";
+import { login } from "@/services/users.service.js"
+import { useRouter } from "vue-router"
+import {computed} from "vue"
 
 const userStore = useUserStore();
 const router = useRouter();

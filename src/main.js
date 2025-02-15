@@ -1,7 +1,7 @@
 import './assets/main.scss'
 import { createI18n } from 'vue-i18n'
 import { createPinia } from 'pinia'
-import index from './router/index.js'
+import router from './router/index.js'
 
 import { createApp } from 'vue'
 import App from './App.vue'
@@ -28,5 +28,5 @@ const app = createApp(App)
 
 app.use(i18n)
 app.use(pinia)
-app.use(index)
+app.use(router)
 app.mount('#app')
