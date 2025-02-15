@@ -1,5 +1,5 @@
 const shopMenuBg = '#D1D5DB';
-const shopMenuText = '#451A03'
+const shopMenuText = '#c2a89a'
 const shopMenuHoverBg = '#BFDBFE';
 
 module.exports = {

@@ -10,7 +10,7 @@
         {{ t('title') }}
       </h2>
     </div>
-    <div class="text-sm">
+    <div class="text-sm my-4 mx-auto">
       <RouterLink
         to="/"
         class="forgot-password__form-password-forgot"
@@ -122,7 +122,7 @@ const onSubmit = async (values) => {
 
 <style scoped lang="scss">
 .forgot-password {
-  @apply flex min-h-full flex-col justify-center px-6 py-12 lg:px-8;
+  @apply flex min-h-full min-w-[25%] flex-col justify-center px-6 py-12 lg:px-8;
 
   &__header {
     @apply sm:mx-auto sm:w-full sm:max-w-sm;
@@ -155,7 +155,7 @@ const onSubmit = async (values) => {
     &__btn-submit {
       @apply flex w-full justify-center rounded-md px-3 py-1.5 text-sm/6 font-semibold text-white;
       @apply shadow-sm hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2;
-      @apply focus-visible:outline-indigo-600;
+      @apply focus-visible:outline-indigo-600 mt-12;
     }
   }
 }

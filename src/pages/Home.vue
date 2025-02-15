@@ -1,7 +1,6 @@
 <template>
   <div class="home-page">
-    <h1>{{ t('title') }}</h1>
-    <h3>{{ t('subTitle') }}</h3>
+    <h1>Home page</h1>
   </div>
 </template>
 

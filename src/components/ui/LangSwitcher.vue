@@ -52,9 +52,9 @@ watchEffect(() => {
   @apply xl:mr-4 xl:text-xl p-2;
 }
 .switch-button {
-  @apply p-2 bg-menu-hover-bg rounded-xl;
+  @apply p-2 rounded-xl;
 }
 .active {
-  @apply  text-blue-700 font-semibold;
+  @apply  text-yellow-500 font-semibold;
 }
 </style>

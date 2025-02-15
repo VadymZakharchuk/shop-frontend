@@ -45,10 +45,10 @@ fetchCategories()
   .main-menu {
     @apply text-3xl text-menu-text font-medium;
     @apply flex flex-row justify-between items-center;
-    @apply bg-gray-300 px-[96px] text-xl;
+    @apply w-full text-xl;
 
     &__list {
-      @apply flex flex-row justify-between items-center;
+      @apply flex flex-row justify-start items-center;
       &-item {
         @apply cursor-pointer xl:mx-4;
       }

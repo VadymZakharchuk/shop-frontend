@@ -1,6 +1,6 @@
 <template>
   <div class="shop-main">
-    <MainMenu />
+    <AppHeader />
     <RouterView v-slot="{ Component }">
       <component
         :is="Component"
@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import MainMenu from '@/components/ui/MainMenu.vue';
+import AppHeader from "@/components/AppHeader.vue";
 import { useRoute } from "vue-router";
 import { useI18n } from "vue-i18n";
 
