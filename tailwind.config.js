@@ -1,6 +1,6 @@
 const shopMenuBg = '#D1D5DB';
-const shopMenuText = '#c2a89a'
 const shopMenuHoverBg = '#BFDBFE';
+const menuText = '#e8b06e';
 
 module.exports = {
   content: [
@@ -10,7 +10,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'menu-text': shopMenuText,
+        'menu-text': menuText,
         'menu-bg': shopMenuBg,
         'menu-hover-bg': shopMenuHoverBg,
         'user-logged': 'text-green-500',

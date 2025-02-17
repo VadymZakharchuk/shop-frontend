@@ -54,7 +54,7 @@ const homeLink = computed(() => {
   }
 
   &__menu {
-    @apply flex flex-row justify-start items-center w-full px-[96px];
+    @apply flex flex-row justify-start items-center w-full px-[96px] bg-cyan-900;
   }
 }
 </style>

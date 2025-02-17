@@ -1,8 +1,8 @@
 <template>
   <div class="lang-switcher">
     <button
-      :class="{ 'active': locale === 'en'}"
-      class="switch-button mr-2"
+      :class="{ 'non-active': locale === 'uk'}"
+      class="switch-button"
       @click="setLanguage('en')"
     >
       <img
@@ -11,7 +11,7 @@
       >
     </button>
     <button
-      :class="{ 'active': locale === 'uk'}"
+      :class="{ 'non-active': locale === 'en'}"
       class="switch-button"
       @click="setLanguage('uk')"
     >
@@ -26,7 +26,7 @@
 import { useI18n } from 'vue-i18n';
 import { watchEffect } from 'vue';
 
-const { t, locale } = useI18n({
+const { locale } = useI18n({
   useScope: 'global',
   messages: {
     en: {
@@ -58,9 +58,9 @@ watchEffect(() => {
   @apply xl:mr-4 xl:text-xl p-2;
 }
 .switch-button {
-  @apply p-2 rounded-xl;
+  @apply p-2 rounded-xl w-12 h-12;
 }
-.active {
-  @apply  text-yellow-500 font-semibold;
+.non-active {
+  @apply opacity-40;
 }
 </style>
