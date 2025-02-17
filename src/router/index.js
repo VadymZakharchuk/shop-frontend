@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from "@/store/user.js"
 import Cookies from 'js-cookie'
-import Home from "@/pages/Home.vue"
+import Home from "@/pages/HomePage.vue"
 import DefaultLayout from "@/layouts/DefaultLayout.vue";
 
 const SignIn = () => import('@/components/auth/SignIn.vue')

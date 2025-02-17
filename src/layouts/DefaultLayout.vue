@@ -29,7 +29,7 @@ locale.value = routeLang;
   @apply mx-auto;
   &__page {
     @apply w-screen h-screen;
-    @apply xl:mx-auto xl:px-[162px];
+    @apply xl:mx-auto xl:px-[96px];
     @apply bg-blue-100;
     //@apply bg-[url(/img/wallpaper.jpg)] bg-contain bg-center;
   }
