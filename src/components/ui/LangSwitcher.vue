@@ -5,14 +5,20 @@
       class="switch-button mr-2"
       @click="setLanguage('en')"
     >
-      {{ t('en') }}
+      <img
+        src="/img/united_kingdom.png"
+        alt="United Kingdom"
+      >
     </button>
     <button
       :class="{ 'active': locale === 'uk'}"
       class="switch-button"
       @click="setLanguage('uk')"
     >
-      {{ t('uk') }}
+      <img
+        src="/img/ukraine.png"
+        alt="Ukraine"
+      >
     </button>
   </div>
 </template>

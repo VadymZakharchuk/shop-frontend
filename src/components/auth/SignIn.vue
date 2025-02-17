@@ -97,7 +97,7 @@ import Cookies from 'js-cookie'
 import xorCrypt from 'xor-crypt'
 import { login } from "@/services/users.service.js"
 import { useRouter } from "vue-router"
-import {computed} from "vue"
+import { computed } from "vue"
 
 const userStore = useUserStore();
 const router = useRouter();
@@ -137,10 +137,11 @@ const schema = Yup.object({
 const onSubmit = async (values) => {
   values.phone = '38' + values.phone.replace(/\D/g,'');
   values.password = xorCrypt(values.password,9);
-  userStore.token = await login(values)
-  Cookies.set('token', userStore.token)
-  if (userStore.token) {
-    await router.push(`/${locale.value}/cabinet`)
+  const data = await login(values)
+  userStore.user = { ...data.user }
+  Cookies.set('auth-token', data.token)
+  if (data.token) {
+    await router.push({ name:`cabinet__${locale.value}` })
   }
 }
 

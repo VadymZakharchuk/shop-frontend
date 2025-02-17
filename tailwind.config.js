@@ -13,6 +13,7 @@ module.exports = {
         'menu-text': shopMenuText,
         'menu-bg': shopMenuBg,
         'menu-hover-bg': shopMenuHoverBg,
+        'user-logged': 'text-green-500',
       },
     },
   },

@@ -14,9 +14,12 @@
     </div>
     <div class="main-menu__list">
       <LangSwitcher />
-      <IconCart class="menu-icon" />
+      <IconCart class="menu-icon text-menu-text" />
       <RouterLink :to="'/cabinet'">
-        <IconUser class="menu-icon" />
+        <IconUser
+          :class="iconUserColor"
+          class="menu-icon"
+        />
       </RouterLink>
     </div>
   </div>
@@ -26,6 +29,7 @@
 import { useI18n } from "vue-i18n";
 import { categories } from "@/config/categories.js";
 import {computed, ref } from "vue";
+import { useUserStore } from "@/store/user.js"
 import { getCategories } from '@/services/categories.service';
 import LangSwitcher from "@/components/ui/LangSwitcher.vue";
 import IconCart from "@/components/ui/icons/IconCart.vue";
@@ -35,10 +39,19 @@ const { locale } = useI18n()
 const menuData = computed(() => {
   return categories[`${locale.value}`].map((item) => { item.name = item.name.toUpperCase(); return item; })
 })
+const userStore = useUserStore();
+
+const iconUserColor = computed(() => {
+  return userStore.isLoggedInAndHasToken
+      ? 'text-user-logged'
+      : 'text-menu-text'
+  }
+)
 
 const rubrics = ref([])
 async function fetchCategories() { rubrics.value = await getCategories(locale.value) }
 fetchCategories()
+
 </script>
 
 <style scoped lang="scss">

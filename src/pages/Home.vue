@@ -1,11 +1,13 @@
 <template>
   <div class="home-page">
     <h1>Home page</h1>
+    <LangSlider class="mt-10" />
   </div>
 </template>
 
 <script setup>
 import { useI18n } from "vue-i18n";
+import LangSlider from "@/components/ui/LangSlider.vue";
 
 const { t } = useI18n({
   messages: {
