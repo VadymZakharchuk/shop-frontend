@@ -6,20 +6,26 @@
 
 <script setup>
 import { useI18n } from "vue-i18n";
+import { getProducts } from "@/services/products.service.js";
+import { ref } from "vue";
 
-const { t } = useI18n({
+const { locale } = useI18n({
   messages: {
     en: {
       title: "Store of things with a Ukrainian soul",
-      subTitle: "Things for those in love with their country"
     },
     uk: {
       title: "Магазин речей з українською душею",
-      subTitle: "Речі для закоханих у свою країну"
     }
   }
 });
 
+const products = ref([]);
+const fetchProducts = async () => {
+  products.value = await getProducts(locale.value, 10);
+  console.log(products.value);
+};
+fetchProducts();
 </script>
 
 <style scoped lang="scss">

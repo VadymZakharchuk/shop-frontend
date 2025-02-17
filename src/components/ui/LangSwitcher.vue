@@ -26,19 +26,7 @@
 import { useI18n } from 'vue-i18n';
 import { watchEffect } from 'vue';
 
-const { locale } = useI18n({
-  useScope: 'global',
-  messages: {
-    en: {
-      en: "Eng",
-      uk: "Ukr"
-    },
-    uk: {
-      en: "Анг",
-      uk: "Укр"
-    }
-  }
-});
+const { locale } = useI18n();
 
 const setLanguage = (newLang) => {
   locale.value = newLang;
