@@ -56,7 +56,7 @@ fetchCategories()
 
 <style scoped lang="scss">
   .main-menu {
-    @apply text-3xl text-menu-text font-medium;
+    @apply text-3xl text-menu-text font-medium font-roboto;
     @apply flex flex-row justify-between items-center;
     @apply w-full text-xl;
 

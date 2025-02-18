@@ -9,6 +9,10 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        'caveat': ['Caveat', 'sans-serif'],
+        'roboto': ['Roboto', 'sans-serif']
+      },
       colors: {
         'menu-text': menuText,
         'menu-bg': shopMenuBg,

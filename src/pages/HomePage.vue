@@ -12,6 +12,7 @@
           <img
             :src="imgUrl(item.image)"
             :alt="item.name"
+            class="rounded"
           >
         </div>
       </Slide>
@@ -20,15 +21,21 @@
         <Navigation />
       </template>
     </Carousel>
+    <ProductCard
+      v-if="products.length"
+      :product="products[0]"
+    />
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
+import ProductCard from "@/components/ui/ProductCard.vue";
 import 'vue3-carousel/carousel.css'
 import { Carousel, Slide, Navigation } from 'vue3-carousel'
 import { getProducts } from "@/services/products.service.js";
+import { imageUrl } from "@/utils/imageUrl.js";
 
 
 const { locale } = useI18n({
@@ -47,13 +54,8 @@ const carouselConfig = {
   autoplay: 3000,
   wrapAround: true,
   pauseAutoplayOnHover: true,
-  gap: 8,
+  gap: 12,
   snapAlign: 'center',
-
-  // 'breakpointMode' determines how the carousel breakpoints are calculated
-  // Acceptable values: 'viewport' (default) | 'carousel'
-  // 'viewport' - breakpoints are based on the viewport width
-  // 'carousel' - breakpoints are based on the carousel width
   breakpointMode: 'carousel',
 
   // Breakpoints are mobile-first
@@ -82,7 +84,7 @@ const fetchProducts = async () => {
 fetchProducts()
 
 const imgUrl = (path) => {
-  return `${import.meta.env.VITE_IMG_URL}${path}`;
+  return imageUrl(path)
 }
 </script>
 

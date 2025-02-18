@@ -8,7 +8,7 @@
         >
       </RouterLink>
       <div class="app-header__logo-text">
-        <div class="font-semibold">
+        <div class="font-caveat font-semibold">
           {{ t('title') }}
         </div>
       </div>
