@@ -24,7 +24,6 @@ export const useUserStore = defineStore('initStore', {
         productId: id
       }
       this.favourites.push(fav)
-      console.log('store added fav')
       if (this.isLoggedInAndHasToken) {
         await addFav({ userId: this.user.id, productId: id })
       }
