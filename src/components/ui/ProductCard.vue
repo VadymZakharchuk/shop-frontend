@@ -8,7 +8,7 @@
         v-if="product.is_new"
         class="product-card__icons-new"
       >
-        <span class="relative right-1">NEW</span>
+        <span class="relative right-1 top-[2px]">NEW</span>
       </div>
       <div
         v-else
@@ -16,12 +16,15 @@
       >
         <span class="relative right-1" />
       </div>
-      <div
-        v-if="product.is_new"
+      <a
         class="product-card__icons-fav"
+        @click="handleFavClick"
       >
-        FAV
-      </div>
+        <img
+          :src="isFav ? '/img/fav-on.png' : '/img/fav-off.png'"
+          alt="favourite"
+        >
+      </a>
     </div>
     <div class="product-card__info">
       <h3 class="product-card__title">
@@ -36,16 +39,23 @@
 import { useI18n } from "vue-i18n";
 import { computed } from "vue";
 import { imageUrl } from "@/utils/imageUrl.js";
+import { useUserStore } from "@/store/user.js";
 
 const { locale } = useI18n()
+const userStore = useUserStore();
 const $props = defineProps({
   product: {
     type: Object,
     required: true
   }
 })
-console.log($props.product[`name_${locale.value}`], `name_${locale.value}`)
+
 const productName = computed(() => $props.product[`name_${locale.value}`])
+const isFav = computed(() => {
+  const data = userStore.userFavourites
+  return data.find(item => item.productId === $props.product.id) !== undefined
+})
+
 const cardStyle = computed(() => ({
   backgroundImage: `url(${imageUrl($props.product.image)})`,
   backgroundSize: 'cover',
@@ -54,6 +64,14 @@ const cardStyle = computed(() => ({
   width: '324px',
   height: '324px',
 }))
+
+const handleFavClick = async () => {
+  if (isFav.value) {
+    await userStore.removeFavourite($props.product.id)
+  } else {
+    await userStore.addFavourite($props.product.id)
+  }
+}
 </script>
 
 <style scoped lang="scss">
@@ -77,8 +95,9 @@ const cardStyle = computed(() => ({
       @apply rounded-full p-2 w-10 h-10 relative;
     }
     &-fav {
-      @apply bg-red-600 text-white font-medium;
+      @apply bg-white font-medium;
       @apply rounded-full p-2 w-10 h-10;
+      @apply hover:scale-110;
     }
   }
 }

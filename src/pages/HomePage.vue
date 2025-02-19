@@ -23,7 +23,7 @@
     </Carousel>
     <ProductCard
       v-if="products.length"
-      :product="products[0]"
+      :product="products[8]"
     />
   </div>
 </template>
@@ -31,12 +31,13 @@
 <script setup>
 import { ref } from "vue";
 import { useI18n } from "vue-i18n";
+import { useUserStore } from "@/store/user.js";
 import ProductCard from "@/components/ui/ProductCard.vue";
 import 'vue3-carousel/carousel.css'
 import { Carousel, Slide, Navigation } from 'vue3-carousel'
 import { getProducts } from "@/services/products.service.js";
+import { listFavs } from "@/services/favourites.service.js";
 import { imageUrl } from "@/utils/imageUrl.js";
-
 
 const { locale } = useI18n({
   messages: {
@@ -48,6 +49,8 @@ const { locale } = useI18n({
     }
   }
 });
+
+const userStore = useUserStore();
 
 const carouselConfig = {
   itemsToShow: 3,
@@ -81,7 +84,13 @@ const products = ref([]);
 const fetchProducts = async () => {
   products.value = await getProducts(locale.value, 10);
 };
+const fetchFavourites = async () => {
+  if (userStore.isLoggedInAndHasToken) {
+    userStore.favourites = await listFavs(userStore.user.id);
+  }
+};
 fetchProducts()
+fetchFavourites()
 
 const imgUrl = (path) => {
   return imageUrl(path)
