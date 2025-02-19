@@ -40,7 +40,7 @@
         </span>
         <span v-else> &nbsp; &nbsp; </span>
       </div>
-      <button>BUY</button>
+      <BtnBuy :btn-text="Купити" />
     </div>
   </div>
 </template>
@@ -52,9 +52,11 @@ import { computed } from "vue";
 import { imageUrl } from "@/utils/imageUrl.js";
 import { useUserStore } from "@/store/user.js";
 import { toCurrencyString } from "@/utils/toCurrencyString.js";
+import BtnBuy from "@/components/ui/BtnBuy.vue";
 
 const { locale } = useI18n()
 const userStore = useUserStore();
+
 const $props = defineProps({
   product: {
     type: Object,
@@ -128,4 +130,5 @@ const handleFavClick = async () => {
     }
   }
 }
+
 </style>
