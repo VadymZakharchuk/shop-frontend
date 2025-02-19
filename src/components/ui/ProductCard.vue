@@ -43,6 +43,7 @@
       <BtnBuy
         btn-text="Купити"
         class="mt-3"
+        @clicked="handleBuyClick"
       />
     </div>
   </div>
@@ -92,6 +93,10 @@ const handleFavClick = async () => {
   } else {
     await userStore.addFavourite($props.product.id)
   }
+}
+
+const handleBuyClick = () => {
+  console.log('Buy clicked')
 }
 </script>
 

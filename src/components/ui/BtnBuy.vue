@@ -33,7 +33,6 @@ defineProps({
 })
 
 const handleClick = () => {
-  console.log('Button clicked');
   emit('clicked');
 }
 </script>
