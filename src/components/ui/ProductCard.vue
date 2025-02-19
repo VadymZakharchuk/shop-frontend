@@ -40,7 +40,10 @@
         </span>
         <span v-else> &nbsp; &nbsp; </span>
       </div>
-      <BtnBuy :btn-text="Купити" />
+      <BtnBuy
+        btn-text="Купити"
+        class="mt-3"
+      />
     </div>
   </div>
 </template>
@@ -96,7 +99,7 @@ const handleFavClick = async () => {
 .product-card {
   @apply flex flex-col items-center font-sans text-lg;
   @apply bg-white rounded-xl shadow-md;
-  @apply w-[340px] h-[340px] p-4;
+  @apply w-[340px] h-[440px] p-4;
   @apply cursor-pointer transition-all duration-300;
   @apply hover:shadow-lg hover:bg-gray-100;
 
