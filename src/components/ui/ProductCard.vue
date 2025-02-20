@@ -26,22 +26,26 @@
         >
       </a>
     </div>
-    <div class="product-card__info">
+    <div
+      v-if="isBuyBtn"
+      class="product-card__info"
+    >
       <h3 class="product-card__info-title">
         {{ productName }}
       </h3>
       <div class="product-card__info-offer">
-        <span class="mr-8">{{ toCurrencyString(product.price) }}</span>
+        <span class="mr-8">{{ productPrice }}</span>
         <span
           v-if="product.discount"
           class="text-gray-400 line-through"
         >
-          {{ toCurrencyString(product.discount) }}
+          {{ fullPrice }}
         </span>
         <span v-else> &nbsp; &nbsp; </span>
       </div>
       <BtnBuy
-        btn-text="Купити"
+        :btn-text="inBasket ? t('inBasket') : t('toBasket')"
+        :in-basket="inBasket"
         class="mt-3"
         @clicked="handleBuyClick"
       />
@@ -55,11 +59,24 @@ import { useI18n } from "vue-i18n";
 import { computed } from "vue";
 import { imageUrl } from "@/utils/imageUrl.js";
 import { useUserStore } from "@/store/user.js";
-import { toCurrencyString } from "@/utils/toCurrencyString.js";
+import { useBasketStore } from "@/store/basket.js";
 import BtnBuy from "@/components/ui/BtnBuy.vue";
+import { toCurrencyString } from "@/utils/toCurrencyString.js";
 
-const { locale } = useI18n()
+const { locale, t } = useI18n({
+  messages: {
+    en: {
+      toBasket: "To basket",
+      inBasket: "In basket",
+    },
+    uk: {
+      toBasket: "До кошику",
+      inBasket: "У кошику",
+    }
+  }
+})
 const userStore = useUserStore();
+const basketStore = useBasketStore();
 
 const $props = defineProps({
   product: {
@@ -78,13 +95,17 @@ const isFav = computed(() => {
   return data.find(item => item.productId === $props.product.id) !== undefined
 })
 
+
+const productPrice = computed(() => toCurrencyString($props.product.price, 1, locale.value))
+const fullPrice =computed(() => toCurrencyString( +$props.product.price + +$props.product.discount, 1, locale.value))
+
 const cardStyle = computed(() => ({
   backgroundImage: `url(${imageUrl($props.product.image)})`,
   backgroundSize: 'cover',
   backgroundPosition: 'center',
   repeat: 'no-repeat',
-  width: '324px',
-  height: '324px',
+  width: '350px',
+  height: $props.isBuyBtn ? '324px' : '100%',
 }))
 
 const handleFavClick = async () => {
@@ -95,8 +116,19 @@ const handleFavClick = async () => {
   }
 }
 
+const inBasket = computed(() => {
+  const data = basketStore.userBasket
+  if(!data) return false
+  return basketStore.basket.find(item => item.product.id === +$props.product.id) !== undefined
+})
 const handleBuyClick = () => {
-  console.log('Buy clicked')
+  const basket = basketStore.basket
+  const isPresent = basket.find(item => item.product.id === +$props.product.id)
+  if (basketStore.basket.length > 0 && isPresent)  return
+  basketStore.basket.push({
+    product: $props.product,
+    quantity: 1
+  })
 }
 </script>
 
@@ -104,7 +136,7 @@ const handleBuyClick = () => {
 .product-card {
   @apply flex flex-col items-center font-sans text-lg;
   @apply bg-white rounded-xl shadow-md;
-  @apply w-[340px] h-[440px] p-4;
+  @apply w-[366px] h-[440px] p-4;
   @apply cursor-pointer transition-all duration-300;
   @apply hover:shadow-lg hover:bg-gray-100;
 
@@ -128,13 +160,13 @@ const handleBuyClick = () => {
   }
   &__info {
     @apply flex flex-col items-center;
-    @apply py-4;
+    @apply py-1;
     &-title {
-      @apply text-cyan-900 text-xl font-medium;
+      @apply text-cyan-900 text-xl font-medium mt-2;
     }
     &-offer {
       @apply flex flex-row justify-between items-center;
-      @apply text-gray-800 text-lg font-medium;
+      @apply text-gray-800 text-lg font-medium mt-2;
     }
   }
 }

@@ -14,7 +14,14 @@
     </div>
     <div class="main-menu__list">
       <LangSwitcher />
-      <IconCart class="menu-icon text-menu-text" />
+      <div class="relative">
+        <IconCart class="menu-icon text-menu-text" />
+        <span
+          v-if="basketCount"
+          class="menu-icon__counter"
+        >{{ basketCount }}
+        </span>
+      </div>
       <RouterLink :to="'/cabinet'">
         <IconUser
           :class="iconUserColor"
@@ -30,6 +37,7 @@ import { useI18n } from "vue-i18n";
 import { categories } from "@/config/categories.js";
 import {computed, ref } from "vue";
 import { useUserStore } from "@/store/user.js"
+import { useBasketStore } from "@/store/basket.js";
 import { getCategories } from '@/services/categories.service';
 import LangSwitcher from "@/components/ui/LangSwitcher.vue";
 import IconCart from "@/components/ui/icons/IconCart.vue";
@@ -40,7 +48,12 @@ const menuData = computed(() => {
   return categories[`${locale.value}`].map((item) => { item.name = item.name.toUpperCase(); return item; })
 })
 const userStore = useUserStore();
+const basketStore = useBasketStore();
 
+const basketCount = computed(() => {
+  const data = basketStore.userBasket
+  return data.length
+})
 const iconUserColor = computed(() => {
   return userStore.isLoggedInAndHasToken
       ? 'text-user-logged'
@@ -72,6 +85,10 @@ fetchCategories()
   }
 
   .menu-icon {
-    @apply cursor-pointer xl:mx-4 h-[24px] w-[24px];
+    @apply cursor-pointer xl:mx-4 h-[24px] w-[24px] relative;
+    
+    &__counter{
+      @apply absolute bg-red-600 text-white w-fit px-1 rounded-full text-xs h-4 bottom-3 right-2 text-center;
+    }
   }
 </style>

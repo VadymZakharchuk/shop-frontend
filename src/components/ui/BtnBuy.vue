@@ -1,36 +1,45 @@
 <template>
   <a
+    :class="statusClass"
     class="btn-buy"
     @click="handleClick"
   >
-    <span class="btn-buy-left" />
-    <span class="btn-buy-right">
+    <span class="btn-buy__span">
       <svg
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
+        viewBox="0 0 487 487"
+        class="w-auto h-full opacity-100 object-stretch"
         xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M14 5l7 7m0 0l-7 7m7-7H3"
-        />
-      </svg>
+      ><path
+        d="M0 .3c67 2.1 134.1 4.3 186.3 37 52.2 32.7 89.6 95.8 112.8 150.6 23.2 54.8 32.3 101.4 61.2 149.9 28.9 48.4 77.7 98.8 126.4 149.2H0V.3z"
+        fill="#FFF"
+        fill-rule="nonzero"
+        fill-opacity=".3"
+      /></svg>
     </span>
     <span class="relative">{{ btnText }}</span>
   </a>
 </template>
 
 <script setup>
+import { computed } from "vue";
+
 const emit = defineEmits(['clicked'])
-defineProps({
+const $props = defineProps({
   btnText: {
     type: String,
     default: 'Buy'
   },
+  inBasket: {
+    type: Boolean,
+    default: false
+  }
 })
+
+const statusClass = computed(() => $props.inBasket
+  ? 'bg-blue-400 hover:bg-blue-500 #{!important}'
+  : 'bg-green-400 hover:bg-green-500'
+)
+
 
 const handleClick = () => {
   emit('clicked');
@@ -39,17 +48,12 @@ const handleClick = () => {
 
 <style scoped lang="scss">
 .btn-buy {
-  @apply relative inline-flex items-center px-12 py-2 overflow-hidden text-lg font-semibold text-indigo-600;
-  @apply border-2 border-indigo-600 rounded-full hover:text-cyan-800 group-hover:bg-gray-50;
-  &-left {
-    @apply absolute left-0 block w-full h-0 transition-all bg-indigo-600 opacity-100 group-hover:h-full;
-    @apply top-1/2 group-hover:top-0 duration-300;
-  }
-  &-right {
-    @apply absolute right-0 flex items-center justify-start w-10 h-10 duration-300 transform translate-x-full;
-    @apply group-hover:translate-x-0;
+  @apply relative px-10 py-3 font-medium text-white transition duration-300 rounded-md;
+
+  &__span {
+    @apply absolute bottom-0 left-0 h-full -ml-2;
     svg {
-      @apply w-5 h-5;
+      @apply w-auto h-full opacity-100 object-cover;
     }
   }
 }

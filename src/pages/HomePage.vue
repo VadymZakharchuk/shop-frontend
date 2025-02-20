@@ -1,19 +1,19 @@
 <template>
   <div class="home-page">
-    <Carousel
-      v-bind="carouselConfig"
-      class="pt-10"
-    >
+    <h1 class="home-page__title">
+      <span>{{ t('title') }}</span>
+    </h1>
+    <Carousel v-bind="carouselConfig">
       <Slide
         v-for="item in products"
         :key="item.id"
       >
         <div class="carousel__item">
-          <img
-            :src="imgUrl(item.image)"
-            :alt="item.name"
-            class="rounded"
-          >
+          <ProductCard
+            v-if="products.length"
+            :product="item"
+            :is-buy-btn="false"
+          />
         </div>
       </Slide>
 
@@ -21,10 +21,6 @@
         <Navigation />
       </template>
     </Carousel>
-    <ProductCard
-      v-if="products.length"
-      :product="products[8]"
-    />
   </div>
 </template>
 
@@ -37,15 +33,14 @@ import 'vue3-carousel/carousel.css'
 import { Carousel, Slide, Navigation } from 'vue3-carousel'
 import { getProducts } from "@/services/products.service.js";
 import { listFavs } from "@/services/favourites.service.js";
-import { imageUrl } from "@/utils/imageUrl.js";
 
-const { locale } = useI18n({
+const { locale, t } = useI18n({
   messages: {
     en: {
-      title: "Store of things with a Ukrainian soul",
+      title: "Best positions",
     },
     uk: {
-      title: "Магазин речей з українською душею",
+      title: "Кращі позиції",
     }
   }
 });
@@ -82,7 +77,7 @@ const carouselConfig = {
 
 const products = ref([]);
 const fetchProducts = async () => {
-  products.value = await getProducts(locale.value, 10);
+  products.value = await getProducts(locale.value, { limit: 10 });
 };
 const fetchFavourites = async () => {
   if (userStore.isLoggedInAndHasToken) {
@@ -92,13 +87,18 @@ const fetchFavourites = async () => {
 fetchProducts()
 fetchFavourites()
 
-const imgUrl = (path) => {
-  return imageUrl(path)
-}
 </script>
 
 <style scoped lang="scss">
-//.home-page {
-//   @apply px-12 #{!important};
-//}
+.home-page {
+  @apply font-sans;
+  &__title {
+    @apply py-16 text-center mb-4;
+
+    span {
+      @apply text-3xl font-semibold text-cyan-800;
+      @apply pb-8 border-b-2 border-gray-300;
+    }
+  }
+}
 </style>
