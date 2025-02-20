@@ -11,7 +11,7 @@ export const useUserStore = defineStore('initStore', {
   getters: {
     isLoggedInAndHasToken({ user }) {
       const token = Cookies.get('auth-token')
-      return !!(Object.keys(user).length && token.length)
+      return !!(user.id && token)
     },
     userFavourites({ favourites }) {
       return favourites

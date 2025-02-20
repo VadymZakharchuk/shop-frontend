@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from "@/store/user.js"
+import { jwtDecode } from "jwt-decode"
 import Cookies from 'js-cookie'
 import Home from "@/pages/HomePage.vue"
 import DefaultLayout from "@/layouts/DefaultLayout.vue";
@@ -87,9 +88,16 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore()
   const lang = from.name?.includes('__uk') ? 'uk' : 'en'
-  const token = Cookies.get('auth-token')
-  const isLogged = Object.keys(userStore?.user).length > 0 && token
-  if (to.path.includes('cabinet') && !isLogged) next({ name: `login__${lang}` })
+  let token = Cookies.get('auth-token')
+  if (token) {
+    const decoded = jwtDecode(token)
+    if (new Date() - new Date(decoded.exp * 1000)) {
+      Cookies.remove('auth-token')
+      token = ''
+    }
+  }
+
+  if (to.path.includes('cabinet') && !userStore.isLoggedInAndHasToken) next({ name: `login__${lang}` })
   else next()
 })
 export default router;
