@@ -5,7 +5,7 @@
     </h1>
     <div class="shirts-page__wrap">
       <div class="shirts-page__filters">
-        Filters
+        <SizesList :sizes="sizes" />
       </div>
       <div class="shirts-page__list">
         <div
@@ -21,11 +21,14 @@
 
 <script setup>
 import { getProducts } from "@/services/products.service.js";
+import { getSizes } from "@/services/sizes.service.js";
 import { useI18n } from "vue-i18n";
 import { ref } from "vue";
 import ProductCard from "@/components/ui/ProductCard.vue";
+import SizesList from "@/components/ui/SizesList.vue";
 
 const products = ref([])
+const sizes = ref([])
 const { locale, t } = useI18n({
   messages: {
     en: {
@@ -36,10 +39,11 @@ const { locale, t } = useI18n({
     }
   }
 });
-const fetchProducts = async () => {
+const fetchData = async () => {
   products.value = await getProducts(locale.value,{ categoryId: 2 });
+  sizes.value = await getSizes();
 };
-fetchProducts()
+fetchData()
 </script>
 
 <style scoped lang="scss">

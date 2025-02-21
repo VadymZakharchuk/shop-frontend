@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from "@/store/user.js"
+import { useBasketStore } from "@/store/basket.js";
 import { jwtDecode } from "jwt-decode"
 import Cookies from 'js-cookie'
 import Home from "@/pages/HomePage.vue"
@@ -87,14 +88,18 @@ const router = createRouter({
 })
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore()
+  const basketStore = useBasketStore()
   const lang = from.name?.includes('__uk') ? 'uk' : 'en'
   let token = Cookies.get('auth-token')
   if (token) {
     const decoded = jwtDecode(token)
-    if (new Date() - new Date(decoded.exp * 1000)) {
+    if (new Date() - new Date(decoded.exp * 1000) > 0) {
       Cookies.remove('auth-token')
       token = ''
     }
+  }
+  else {
+    basketStore.clearBasket()
   }
 
   if (to.path.includes('cabinet') && !userStore.isLoggedInAndHasToken) next({ name: `login__${lang}` })

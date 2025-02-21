@@ -52,7 +52,7 @@ const carouselConfig = {
   autoplay: 3000,
   wrapAround: true,
   pauseAutoplayOnHover: true,
-  gap: 12,
+  gap: 8,
   snapAlign: 'center',
   breakpointMode: 'carousel',
 
@@ -69,7 +69,7 @@ const carouselConfig = {
       snapAlign: 'start',
     },
     968: {
-      itemsToShow: 4,
+      itemsToShow: 3,
       snapAlign: 'start',
     },
   },

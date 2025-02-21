@@ -11,5 +11,8 @@ export const useBasketStore = defineStore('basketStore', {
     }
   },
   actions: {
+    clearBasket() {
+      this.basket = []
+    }
   }
 })
