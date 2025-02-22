@@ -5,7 +5,18 @@
     </h1>
     <div class="shirts-page__wrap">
       <div class="shirts-page__filters">
-        <SizesList :sizes="sizes" />
+        <RadioList
+          field="text"
+          :items="sex"
+          :checked="selectedSex"
+          :legend="t('title1')"
+          @checked="handleSizeChanges"
+        />
+        <SelectList
+          :items="sizes"
+          field="text"
+          @selected="handleSelection"
+        />
       </div>
       <div class="shirts-page__list">
         <div
@@ -25,7 +36,8 @@ import { getSizes } from "@/services/sizes.service.js";
 import { useI18n } from "vue-i18n";
 import { ref } from "vue";
 import ProductCard from "@/components/ui/ProductCard.vue";
-import SizesList from "@/components/ui/SizesList.vue";
+import SelectList from "@/components/ui/SelectList.vue";
+import RadioList from "@/components/ui/RadioList.vue";
 
 const products = ref([])
 const sizes = ref([])
@@ -33,15 +45,41 @@ const { locale, t } = useI18n({
   messages: {
     en: {
       title: "T-Shirts",
+      title1: "Sizes for",
+      man: "Men",
+      woman: "Women"
     },
     uk: {
       title: "Футболки",
+      title1: "Розміри для",
+      man: "Чоловіків",
+      woman: "Жінок"
     }
   }
 });
+
+const sex = [{
+    id: "w",
+    text: t('woman')
+  },
+  {
+    id: "m",
+    text: t('man')
+  }]
+const selectedSex = ref(sex[0].text)
+const handleSizeChanges = async (value) => {
+  selectedSex.value = value
+  const id = sex.find(s => s.text === value).id
+  sizes.value = await getSizes({ params: { sex: id }});
+}
+const handleSelection = async (data) => {
+  const sizes = data.map(item => { return { int: item.split('')[0] } })
+  const p = sizes.map(item => Object.values(item))
+  products.value = await getProducts(locale.value,{ categoryId: 2, size: p.join(',') });
+}
 const fetchData = async () => {
   products.value = await getProducts(locale.value,{ categoryId: 2 });
-  sizes.value = await getSizes();
+  sizes.value = await getSizes({ params: { sex: sex[0].id }});
 };
 fetchData()
 </script>
