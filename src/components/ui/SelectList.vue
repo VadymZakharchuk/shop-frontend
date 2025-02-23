@@ -1,17 +1,18 @@
 <template>
   <div class="select-list">
-    <form class="select-list__form">
+    <fieldset>
       <div
         v-for="item in listItems"
         :key="item.key"
         :class="isItemSelected(item.text) ? 'selected-item' : 'normal-item'"
-        class="select-list__form-input"
+        class="select-list__form"
       >
         <input
           :id="item.key"
           v-model="selectedItems"
           :value="item.text"
           type="checkbox"
+          class="select-list__form-input"
           :checked="isItemSelected(item.text)"
         >
         <label
@@ -19,7 +20,7 @@
           class="select-list__form-label"
         >{{ item.text }}</label>
       </div>
-    </form>
+    </fieldset>
   </div>
 </template>
 
@@ -63,18 +64,18 @@ const isItemSelected = (value) => {
   &__form {
     @apply max-w-sm mx-auto;
     @apply flex flex-col;
+    @apply flex flex-row justify-start items-center;
 
     &-label {
       @apply ml-3 block text-sm font-medium;
     }
     &-input {
-      @apply flex flex-row justify-start items-center;
-      @apply appearance-none;
+      @apply form-checkbox rounded-full border-cyan-900;
     }
   }
 }
 .selected-item {
-  @apply bg-blue-200 rounded-md p-2;
+  @apply bg-blue-200 text-purple-600 accent-purple-600 rounded-md p-2;
 }
 .normal-item {
   @apply bg-transparent p-2;

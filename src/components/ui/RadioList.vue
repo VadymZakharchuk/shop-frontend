@@ -1,6 +1,8 @@
 <template>
   <div class="radio-list">
-    <div>{{ legend }}</div>
+    <div class="radio-list__legend">
+      {{ legend }}
+    </div>
     <fieldset
       :class="position === 'row' ? 'radio-list__row' : 'radio-list__col'"
       class="radio-list__form"
@@ -20,7 +22,7 @@
         >
         <label
           :for="item.key"
-          :class="item.text === selectedItem ? 'text-blue-600' : 'text-cyan-900'"
+          :class="item.text === selectedItem ? 'text-purple-600' : 'text-cyan-900'"
           class="radio-list__form-label"
         >{{ item.text }}</label>
       </div>
@@ -74,6 +76,10 @@ watchEffect(() => {
 <style scoped lang="scss">
 .radio-list{
   @apply w-full text-cyan-900;
+
+  &__legend {
+    @apply text-lg font-semibold mb-2;
+  }
   &__form {
     @apply max-w-sm mx-auto;
 
