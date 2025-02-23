@@ -22,7 +22,7 @@ locale.value = routeLang;
 
 <style scoped lang="scss">
 .wrapper {
-  @apply flex flex-col items-center justify-center;
+  @apply flex flex-col items-center justify-center font-sans;
 }
 .content {
   @apply bg-white w-[100vw] h-[100vh] flex flex-col items-center justify-center;

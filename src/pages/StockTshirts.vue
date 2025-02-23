@@ -75,6 +75,7 @@ const handleSizeChanges = async (value) => {
 const handleSelection = async (data) => {
   const sizes = data.map(item => { return { int: item.split('')[0] } })
   const p = sizes.map(item => Object.values(item))
+  if (p.length === 0) return
   products.value = await getProducts(locale.value,{ categoryId: 2, size: p.join(',') });
 }
 const fetchData = async () => {
