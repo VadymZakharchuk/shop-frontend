@@ -4,6 +4,7 @@
       <div
         v-for="item in listItems"
         :key="item.key"
+        :class="isItemSelected(item.text) ? 'selected-item' : 'normal-item'"
         class="select-list__form-input"
       >
         <input
@@ -11,7 +12,7 @@
           v-model="selectedItems"
           :value="item.text"
           type="checkbox"
-          :checked="isItemSelected(item.key)"
+          :checked="isItemSelected(item.text)"
         >
         <label
           :for="item.key"
@@ -51,24 +52,31 @@ const listItems = computed(() => {
   })
 })
 
-const isItemSelected = (key) => {
-  return !!selectedItems.value.find( item => item.id === key)
+const isItemSelected = (value) => {
+  return !!selectedItems.value.find( item => item === value)
 }
 </script>
 
 <style scoped lang="scss">
 .select-list{
-  @apply w-fit mt-2 text-blue-600;
+  @apply w-fit mt-2 text-cyan-900;
   &__form {
     @apply max-w-sm mx-auto;
     @apply flex flex-col;
 
     &-label {
-      @apply ml-3 block text-sm font-medium text-gray-900 ;
+      @apply ml-3 block text-sm font-medium;
     }
     &-input {
-      @apply  flex flex-row justify-start items-center;
+      @apply flex flex-row justify-start items-center;
+      @apply appearance-none;
     }
   }
+}
+.selected-item {
+  @apply bg-blue-200 rounded-md p-2;
+}
+.normal-item {
+  @apply bg-transparent p-2;
 }
 </style>
