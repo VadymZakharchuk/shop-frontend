@@ -1,5 +1,11 @@
 <template>
   <div class="select-list">
+    <div
+      v-if="legend"
+      class="select-list__legend"
+    >
+      {{ legend }}
+    </div>
     <fieldset>
       <div
         v-for="item in listItems"
@@ -35,6 +41,10 @@ const $props = defineProps({
   field: {
     type: String,
     required: true
+  },
+  legend: {
+    type: String,
+    default: ''
   }
 })
 const selectedItems = ref([])
@@ -61,6 +71,9 @@ const isItemSelected = (value) => {
 <style scoped lang="scss">
 .select-list{
   @apply w-fit mt-2 text-cyan-900;
+  &__legend {
+    @apply text-lg font-semibold mb-2;
+  }
   &__form {
     @apply max-w-sm mx-auto;
     @apply flex flex-col;
@@ -70,12 +83,12 @@ const isItemSelected = (value) => {
       @apply ml-3 block text-sm font-medium;
     }
     &-input {
-      @apply form-checkbox rounded-full border-cyan-900;
+      @apply form-checkbox rounded-full border-choice-selected;
     }
   }
 }
 .selected-item {
-  @apply bg-blue-200 text-purple-600 accent-purple-600 rounded-md p-2;
+  @apply bg-radio-selected text-choice-selected accent-choice-selected rounded-md p-2;
 }
 .normal-item {
   @apply bg-transparent p-2;

@@ -17,6 +17,13 @@
           field="text"
           @selected="handleSelection"
         />
+
+        <SelectList
+          :items="availableColors"
+          field="name"
+          :legend="t('colors')"
+          @selected="handleSelection"
+        />
       </div>
       <div class="shirts-page__list">
         <div
@@ -34,26 +41,31 @@
 import { getProducts } from "@/services/products.service.js";
 import { getSizes } from "@/services/sizes.service.js";
 import { useI18n } from "vue-i18n";
-import { ref } from "vue";
+import {computed, ref} from "vue";
 import ProductCard from "@/components/ui/ProductCard.vue";
 import SelectList from "@/components/ui/SelectList.vue";
 import RadioList from "@/components/ui/RadioList.vue";
+import {imageUrl} from "@/utils/imageUrl.js";
+
 
 const products = ref([])
 const sizes = ref([])
+
 const { locale, t } = useI18n({
   messages: {
     en: {
       title: "T-Shirts",
       title1: "Sizes for",
       man: "Men",
-      woman: "Women"
+      woman: "Women",
+      colors: "Colors"
     },
     uk: {
       title: "Футболки",
       title1: "Розміри для",
       man: "Чоловіків",
-      woman: "Жінок"
+      woman: "Жінок",
+      colors: "Кольори"
     }
   }
 });
@@ -67,6 +79,17 @@ const sex = [{
     text: t('man')
   }]
 const selectedSex = ref(sex[0].text)
+
+const availableColors = computed(() => {
+  if (products.value.length === 0) return []
+  return products.value.map(item => {
+    return {
+      id: item.colors.id,
+      name: locale.value === 'uk' ? item.colors.name_uk : item.colors.name_en,
+      image: imageUrl(item.colors.image)
+    }
+  })
+})
 const handleSizeChanges = async (value) => {
   selectedSex.value = value
   const id = sex.find(s => s.text === value).id

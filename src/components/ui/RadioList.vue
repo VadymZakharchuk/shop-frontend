@@ -10,7 +10,7 @@
       <div
         v-for="item in listItems"
         :key="item.key"
-        :class="item.text === selectedItem ? 'bg-blue-200' : ' bg-gray-300'"
+        :class="item.text === selectedItem ? 'bg-radio-selected' : ' bg-radio-normal'"
         class="radio-list__form-input"
       >
         <input
@@ -22,7 +22,7 @@
         >
         <label
           :for="item.key"
-          :class="item.text === selectedItem ? 'text-purple-600' : 'text-cyan-900'"
+          :class="item.text === selectedItem ? 'text-choice-selected' : 'text-choice-normal'"
           class="radio-list__form-label"
         >{{ item.text }}</label>
       </div>
@@ -75,7 +75,7 @@ watchEffect(() => {
 
 <style scoped lang="scss">
 .radio-list{
-  @apply w-full text-cyan-900;
+  @apply w-full text-choice-normal;
 
   &__legend {
     @apply text-lg font-semibold mb-2;

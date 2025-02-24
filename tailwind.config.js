@@ -1,6 +1,10 @@
 const shopMenuBg = '#D1D5DB';
 const shopMenuHoverBg = '#BFDBFE';
 const menuText = '#e8b06e';
+const radioNormalBg = '#d1d5db';
+const radioSelectedBg = '#bfdbfe';
+const choiceSelText = '#1E429F';
+const choiceNormText = '#164e63';
 
 module.exports = {
   content: [
@@ -18,6 +22,10 @@ module.exports = {
         'menu-bg': shopMenuBg,
         'menu-hover-bg': shopMenuHoverBg,
         'user-logged': 'text-green-500',
+        'radio-normal': radioNormalBg,
+        'radio-selected': radioSelectedBg,
+        'choice-selected': choiceSelText,
+        'choice-normal': choiceNormText,
       },
     },
   },
