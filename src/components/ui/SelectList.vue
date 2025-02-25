@@ -83,7 +83,7 @@ const isItemSelected = (value) => {
 
 <style scoped lang="scss">
 .select-list{
-  @apply w-fit mt-2 text-cyan-900;
+  @apply w-fit mt-2 text-choice-normal;
   &__legend {
     @apply text-lg font-semibold mb-2;
   }

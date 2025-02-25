@@ -25,6 +25,12 @@
           :legend="t('colors')"
           @selected="handleColorSelection"
         />
+        <ToggleInput
+          :legend="t('onlyNew')"
+          :toggle-text="toggleText"
+          class="mt-2"
+          @toggled="onlyNew = !onlyNew"
+        />
       </div>
       <div class="shirts-page__list">
         <div
@@ -47,10 +53,12 @@ import ProductCard from "@/components/ui/ProductCard.vue";
 import SelectList from "@/components/ui/SelectList.vue";
 import RadioList from "@/components/ui/RadioList.vue";
 import {imageUrl} from "@/utils/imageUrl.js";
+import ToggleInput from "@/components/ui/ToggleInput.vue";
 
 
 const products = ref([])
 const sizes = ref([])
+const onlyNew = ref(true)
 const reqParams = reactive({
   categoryId: 2
 })
@@ -62,14 +70,20 @@ const { locale, t } = useI18n({
       title1: "Sizes for",
       man: "Men",
       woman: "Women",
-      colors: "Colors"
+      colors: "Colors",
+      onlyNew: "New",
+      toggleNo: "All",
+      toggleYes: "New"
     },
     uk: {
       title: "Футболки",
       title1: "Розміри для",
       man: "Чоловіків",
       woman: "Жінок",
-      colors: "Кольори"
+      colors: "Кольори",
+      onlyNew: "Новинки",
+      toggleNo: "Всі",
+      toggleYes: "Тільки новинки"
     }
   }
 });
@@ -83,6 +97,10 @@ const sex = [{
     text: t('man')
   }]
 const selectedSex = ref(sex[0].text)
+
+const toggleText = computed(() =>
+  onlyNew.value ? t('toggleNo') : t('toggleYes')
+)
 
 const availableColors = computed(() => {
   if (products.value.length === 0) return []
