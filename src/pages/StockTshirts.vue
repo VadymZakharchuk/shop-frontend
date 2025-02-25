@@ -10,19 +10,20 @@
           :items="sex"
           :checked="selectedSex"
           :legend="t('title1')"
-          @checked="handleSizeChanges"
+          @checked="handleSexChanges"
         />
         <SelectList
           :items="sizes"
           field="text"
-          @selected="handleSelection"
+          @selected="handleSizeSelection"
         />
 
         <SelectList
           :items="availableColors"
           field="name"
+          image="image"
           :legend="t('colors')"
-          @selected="handleSelection"
+          @selected="handleColorSelection"
         />
       </div>
       <div class="shirts-page__list">
@@ -41,7 +42,7 @@
 import { getProducts } from "@/services/products.service.js";
 import { getSizes } from "@/services/sizes.service.js";
 import { useI18n } from "vue-i18n";
-import {computed, ref} from "vue";
+import {computed, reactive, ref, watch} from "vue";
 import ProductCard from "@/components/ui/ProductCard.vue";
 import SelectList from "@/components/ui/SelectList.vue";
 import RadioList from "@/components/ui/RadioList.vue";
@@ -50,6 +51,9 @@ import {imageUrl} from "@/utils/imageUrl.js";
 
 const products = ref([])
 const sizes = ref([])
+const reqParams = reactive({
+  categoryId: 2
+})
 
 const { locale, t } = useI18n({
   messages: {
@@ -82,25 +86,52 @@ const selectedSex = ref(sex[0].text)
 
 const availableColors = computed(() => {
   if (products.value.length === 0) return []
-  return products.value.map(item => {
-    return {
+  const colorSet = []
+  products.value.forEach(item => {
+    if (colorSet.find(color => color.id === item.colors.id)) return
+    colorSet.push({
       id: item.colors.id,
       name: locale.value === 'uk' ? item.colors.name_uk : item.colors.name_en,
       image: imageUrl(item.colors.image)
-    }
+    })
   })
+  return colorSet
 })
-const handleSizeChanges = async (value) => {
+const handleSexChanges = async (value) => {
   selectedSex.value = value
   const id = sex.find(s => s.text === value).id
   sizes.value = await getSizes({ params: { sex: id }});
 }
-const handleSelection = async (data) => {
+const handleSizeSelection = async (data) => {
   const sizes = data.map(item => { return { int: item.split('')[0] } })
   const p = sizes.map(item => Object.values(item))
-  if (p.length === 0) products.value = await getProducts(locale.value,{ categoryId: 2 });
-  else products.value = await getProducts(locale.value,{ categoryId: 2, size: p.join(',') });
+  if (p.length) reqParams.size = p.join(',')
+  else delete reqParams.size
 }
+
+const handleColorSelection = async (data) => {
+  const res = []
+  if (data.length) {
+    data.forEach(item => {
+      const color = availableColors.value.find(color => color.name === item).id
+      if (color) res.push(color)
+    })
+    reqParams.colorId = res.join(',')
+  }
+  else {
+    delete reqParams.colorId
+  }
+}
+
+watch(
+  () => reqParams,
+  async (reqParams) => {
+    const params = {...reqParams}
+    products.value = await getProducts(locale.value, params)
+  },
+  { deep: true }
+)
+
 const fetchData = async () => {
   products.value = await getProducts(locale.value,{ categoryId: 2 });
   sizes.value = await getSizes({ params: { sex: sex[0].id }});

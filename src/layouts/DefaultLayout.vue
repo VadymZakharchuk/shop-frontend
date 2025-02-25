@@ -26,12 +26,11 @@ locale.value = routeLang;
 
 <style scoped lang="scss">
 .shop-main {
-  @apply mx-auto;
+  @apply mx-auto w-screen h-full;
   &__page {
     @apply w-screen h-full;
     @apply xl:mx-auto xl:px-[96px];
     @apply bg-blue-100;
-    //@apply bg-[url(/img/wallpaper.jpg)] bg-contain bg-center;
   }
 }
 </style>

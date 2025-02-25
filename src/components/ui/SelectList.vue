@@ -24,7 +24,15 @@
         <label
           :for="item.key"
           class="select-list__form-label"
-        >{{ item.text }}</label>
+        >
+          <img
+            v-if="item.image"
+            :src="item.image"
+            alt="item.text"
+            class="w-8 h-8 mix-blend-multiply"
+          >
+          <span v-if="item.text">{{ item.text }}</span>
+        </label>
       </div>
     </fieldset>
   </div>
@@ -42,6 +50,10 @@ const $props = defineProps({
     type: String,
     required: true
   },
+  image: {
+    type: String,
+    default: ''
+  },
   legend: {
     type: String,
     default: ''
@@ -56,10 +68,11 @@ watchEffect(() => {
 
 const listItems = computed(() => {
   return $props.items.map(item => {
-    return {
-      key: item.id,
-      text: item[$props.field]
-    }
+    const res = {}
+    if ($props.image) res.image = item[$props.image]
+    res.key = item.id
+    res.text = item[$props.field]
+    return res
   })
 })
 
@@ -81,6 +94,7 @@ const isItemSelected = (value) => {
 
     &-label {
       @apply ml-3 block text-sm font-medium;
+      @apply flex flex-row justify-start items-center
     }
     &-input {
       @apply form-checkbox rounded-full border-choice-selected;
