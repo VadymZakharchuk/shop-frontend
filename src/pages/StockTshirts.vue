@@ -25,11 +25,10 @@
           :legend="t('colors')"
           @selected="handleColorSelection"
         />
-        <ToggleInput
-          :legend="t('onlyNew')"
-          :toggle-text="toggleText"
-          class="mt-2"
-          @toggled="onlyNew = !onlyNew"
+
+        <ToggleUi
+          :legend="t('newOnly')"
+          @checked="onlyNew = !onlyNew"
         />
       </div>
       <div class="shirts-page__list">
@@ -48,12 +47,12 @@
 import { getProducts } from "@/services/products.service.js";
 import { getSizes } from "@/services/sizes.service.js";
 import { useI18n } from "vue-i18n";
-import {computed, reactive, ref, watch} from "vue";
+import { computed, reactive, ref, watch} from "vue";
 import ProductCard from "@/components/ui/ProductCard.vue";
 import SelectList from "@/components/ui/SelectList.vue";
 import RadioList from "@/components/ui/RadioList.vue";
 import {imageUrl} from "@/utils/imageUrl.js";
-import ToggleInput from "@/components/ui/ToggleInput.vue";
+import ToggleUi from "@/components/ui/ToggleUi.vue";
 
 
 const products = ref([])
@@ -71,9 +70,7 @@ const { locale, t } = useI18n({
       man: "Men",
       woman: "Women",
       colors: "Colors",
-      onlyNew: "New",
-      toggleNo: "All",
-      toggleYes: "New"
+      newOnly: "New"
     },
     uk: {
       title: "Футболки",
@@ -81,9 +78,7 @@ const { locale, t } = useI18n({
       man: "Чоловіків",
       woman: "Жінок",
       colors: "Кольори",
-      onlyNew: "Новинки",
-      toggleNo: "Всі",
-      toggleYes: "Тільки новинки"
+      newOnly: "Тільки новинки"
     }
   }
 });
@@ -97,10 +92,6 @@ const sex = [{
     text: t('man')
   }]
 const selectedSex = ref(sex[0].text)
-
-const toggleText = computed(() =>
-  onlyNew.value ? t('toggleNo') : t('toggleYes')
-)
 
 const availableColors = computed(() => {
   if (products.value.length === 0) return []
