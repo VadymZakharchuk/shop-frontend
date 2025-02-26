@@ -28,7 +28,7 @@
 
         <ToggleUi
           :legend="t('newOnly')"
-          @checked="onlyNew = !onlyNew"
+          @checked="handleIsNewOnly"
         />
       </div>
       <div class="shirts-page__list">
@@ -116,6 +116,11 @@ const handleSizeSelection = async (data) => {
   const p = sizes.map(item => Object.values(item))
   if (p.length) reqParams.size = p.join(',')
   else delete reqParams.size
+}
+const handleIsNewOnly = async (value) => {
+  onlyNew.value = value
+  if (value) reqParams.is_new = true
+  else delete reqParams.is_new
 }
 
 const handleColorSelection = async (data) => {

@@ -8,6 +8,7 @@ export const getProducts = async (lang, params) => {
   if ('offset' in params) pars.offset = params.offset
   if ('size' in params) pars.size = params.size
   if ('colorId' in params) pars.colorId = params.colorId
+  if ('is_new' in params) pars.is_new = params.is_new
   const response = await Api.get(`/products`,
     {
       headers: { 'accept-language': lang },
