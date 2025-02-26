@@ -33,6 +33,7 @@
         />
       </div>
       <div class="shirts-page__list">
+        <SelectUi />
         <div
           v-for="item in products"
           :key="`tshirt-${item.id}`"
@@ -54,6 +55,7 @@ import SelectList from "@/components/ui/SelectList.vue";
 import RadioList from "@/components/ui/RadioList.vue";
 import {imageUrl} from "@/utils/imageUrl.js";
 import ToggleUi from "@/components/ui/ToggleUi.vue";
+import SelectUi from "@/components/ui/SelectUi.vue";
 
 
 const products = ref([])
