@@ -28,6 +28,7 @@
 
         <ToggleUi
           :legend="t('newOnly')"
+          :status="onlyNew"
           @checked="handleIsNewOnly"
         />
       </div>
@@ -57,7 +58,7 @@ import ToggleUi from "@/components/ui/ToggleUi.vue";
 
 const products = ref([])
 const sizes = ref([])
-const onlyNew = ref(true)
+const onlyNew = ref(false)
 const reqParams = reactive({
   categoryId: 2
 })
@@ -117,10 +118,11 @@ const handleSizeSelection = async (data) => {
   if (p.length) reqParams.size = p.join(',')
   else delete reqParams.size
 }
-const handleIsNewOnly = async (value) => {
-  onlyNew.value = value
-  if (value) reqParams.is_new = true
+const handleIsNewOnly = async (status) => {
+  onlyNew.value = status
+  if (status) reqParams.is_new = true
   else delete reqParams.is_new
+  console.log('handleIsNewOnly->', status, reqParams)
 }
 
 const handleColorSelection = async (data) => {

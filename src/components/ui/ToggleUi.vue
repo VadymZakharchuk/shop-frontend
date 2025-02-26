@@ -28,14 +28,18 @@
 import { ref, watch } from "vue";
 import { useI18n } from "vue-i18n";
 
-defineProps({
+const $props = defineProps({
   legend: {
     type: String,
     default: ''
+  },
+  status: {
+    type: Boolean,
+    default: false
   }
 })
 
-const toggleValue = ref(false)
+const toggleValue = ref($props.status)
 const $emit = defineEmits(['checked'])
 const { t } = useI18n({
   messages: {
@@ -54,11 +58,11 @@ const handleClick = (value) => {
 }
 
 watch(
-  () => toggleValue,
-  (value) => {
-    $emit('checked', value)
+  () => toggleValue.value,
+  (status) => {
+    $emit('checked', status)
   },
-  { immediate: true, deep: true }
+  { deep: true }
 )
 </script>
 
