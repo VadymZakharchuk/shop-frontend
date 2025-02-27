@@ -5,6 +5,14 @@
     </h1>
     <div class="shirts-page__wrap">
       <div class="shirts-page__filters">
+        <SelectUi
+          :legend="t('sortBy.legend')"
+          :items="sortModes"
+          field="text"
+          :selected="sortMode"
+          class="w-fit mt-2 mb-4 pr-8"
+          @selected="handleSortModeChange"
+        />
         <RadioList
           field="text"
           :items="sex"
@@ -33,7 +41,6 @@
         />
       </div>
       <div class="shirts-page__list">
-        <SelectUi />
         <div
           v-for="item in products"
           :key="`tshirt-${item.id}`"
@@ -56,6 +63,7 @@ import RadioList from "@/components/ui/RadioList.vue";
 import {imageUrl} from "@/utils/imageUrl.js";
 import ToggleUi from "@/components/ui/ToggleUi.vue";
 import SelectUi from "@/components/ui/SelectUi.vue";
+import {sortByField} from "@/utils/sorting.js";
 
 
 const products = ref([])
@@ -73,7 +81,14 @@ const { locale, t } = useI18n({
       man: "Men",
       woman: "Women",
       colors: "Colors",
-      newOnly: "New"
+      newOnly: "New",
+      sortBy: {
+        legend: "Sort by",
+        priceUp: "Price: low to high",
+        priceDown: "Price: high to low",
+        alphabeticAZ: "Alphabetic A-Z",
+        alphabeticZA: "Alphabetic Z-A"
+      }
     },
     uk: {
       title: "Футболки",
@@ -81,10 +96,23 @@ const { locale, t } = useI18n({
       man: "Чоловіків",
       woman: "Жінок",
       colors: "Кольори",
-      newOnly: "Тільки новинки"
+      newOnly: "Тільки новинки",
+      sortBy: {
+        legend: "Сортування",
+        priceUp: "Ціна: за зростанням",
+        priceDown: "Ціна: за зниженням",
+        alphabeticAZ: "За алфавітом A-Я",
+        alphabeticZA: "За алфавітом Я-А"
+      }
     }
   }
 });
+const sortModes = reactive([
+  { value: 0, text: t('sortBy.priceUp') },
+  { value: 1, text: t('sortBy.priceDown') },
+  { value: 2, text: t('sortBy.alphabeticAZ') },
+  { value: 3, text: t('sortBy.alphabeticZA') }
+])
 
 const sex = [{
     id: "w",
@@ -94,6 +122,7 @@ const sex = [{
     id: "m",
     text: t('man')
   }]
+const sortMode = ref(sortModes[0])
 const selectedSex = ref(sex[0].text)
 
 const availableColors = computed(() => {
@@ -124,7 +153,24 @@ const handleIsNewOnly = async (status) => {
   onlyNew.value = status
   if (status) reqParams.is_new = true
   else delete reqParams.is_new
-  console.log('handleIsNewOnly->', status, reqParams)
+}
+
+const handleSortModeChange = async (data) => {
+  sortMode.value = data
+  switch(data.value) {
+    case 0:
+      products.value = sortByField(products.value, 'price')
+      break
+    case 1:
+      products.value = sortByField(products.value, 'price', 1)
+      break
+    case 3:
+      products.value = sortByField(products.value, `name_${locale.value}`)
+      break
+    case 4:
+      products.value = sortByField(products.value, `name_${locale.value}`, 1)
+      break
+  }
 }
 
 const handleColorSelection = async (data) => {

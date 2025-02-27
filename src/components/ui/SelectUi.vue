@@ -1,56 +1,74 @@
 <template>
   <div class="select-ui">
-    <label
-      for="sortModes"
-      class="select-ui__legend"
-    >{{ t('legend') }}</label>
-    <select
-      id="sortModes"
+    <div class="select-ui__legend">
+      {{ legend }}
+    </div>
+    <a
       class="select-ui__select"
+      @click="handleSelectClick"
     >
-      <option
-        v-for="item in sortModes"
-        :key="item.value"
-        value="item.value"
+      {{ selectedItem[`${field}`] }}
+      <div
+        :class="{ 'hidden': !isCollapsed }"
+        class="select-ui__list"
       >
-        {{ item.label }}
-      </option>
-    </select>
+        <div
+          v-for="item in items"
+          :key="item.value"
+          class="select-ui__list-item"
+          @click="handleSelectItemClick(item)"
+        >
+          {{ item[`${field}`] }}
+        </div>
+      </div>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        :class="isCollapsed ? 'transform rotate-180' : 'transform rotate-0'"
+        viewBox="0 0 16 16"
+      >
+        <path
+          fill-rule="evenodd"
+          d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708"
+        />
+      </svg>
+    </a>
   </div>
 </template>
 
 <script setup>
-import { useI18n } from "vue-i18n";
-import {reactive} from "vue";
-
-const { t } = useI18n({
-  messages: {
-    en: {
-      legend: "Select sorting mode",
-      sortBy: {
-        priceUp: "Price: low to high",
-        priceDown: "Price: high to low",
-        alphabeticAZ: "Alphabetic A-Z",
-        alphabeticZA: "Alphabetic Z-A"
-      }
-    },
-    uk: {
-      legend: "Виберіть режим сортування",
-      sortBy: {
-        priceUp: "Ціна: за зростанням",
-        priceDown: "Ціна: за зниженням",
-        alphabeticAZ: "За алфавітом A-Я",
-        alphabeticZA: "За алфавітом Я-А"
-      }
-    }
+import { ref} from "vue";
+const $emit = defineEmits(['selected'])
+const $props = defineProps({
+  legend: {
+    type: String,
+    default: ''
+  },
+  items: {
+    type: Array,
+    default: () => []
+  },
+  field: {
+    type: String,
+    default: 'name'
+  },
+  selected: {
+    type: Object,
+    default: () => {}
   }
-});
-const sortModes = reactive([
-  { value: "priceUp", label: t('sortBy.priceUp') },
-  { value: "priceDown", label: t('sortBy.priceDown') },
-  { value: "alphabeticAZ", label: t('sortBy.alphabeticAZ') },
-  { value: "alphabeticZA", label: t('sortBy.alphabeticZA') }
-])
+})
+const selectedItem = ref($props.selected)
+const isCollapsed = ref(false)
+const handleSelectClick = (event) => {
+  if (event.target.tagName === 'A')  isCollapsed.value = !isCollapsed.value
+}
+const handleSelectItemClick = (item) => {
+  selectedItem.value = item
+  isCollapsed.value = false
+  $emit('selected', item)
+}
 </script>
 
 <style scoped lang="scss">
@@ -58,11 +76,20 @@ const sortModes = reactive([
   @apply block w-full;
 
   &__legend {
-    @apply block mb-2 text-sm font-medium text-gray-600 w-full;
+    @apply block mb-2 text-base font-medium text-choice-normal w-full;
   }
 
   &__select {
-    @apply h-10 border border-gray-300 text-gray-600 text-base rounded-lg block w-full py-2 px-4 focus:outline-none;
+    @apply h-9 border border-gray-300 text-choice-normal text-base rounded-lg w-full px-4 focus:outline-none;
+    @apply relative flex items-center justify-between shadow-md  bg-white cursor-pointer;
+  }
+  &__list {
+    @apply absolute top-10 left-0 w-full bg-white border border-gray-300 rounded-lg shadow-md;
+
+    &-item {
+      @apply py-2 px-4 text-base text-choice-normal cursor-pointer;
+      @apply hover:bg-gray-100;
+    }
   }
 }
 </style>
