@@ -1,7 +1,7 @@
 <template>
   <div class="shirts-page">
     <h1 class="shirts-page__title">
-      <span>{{ t('title') }}</span>
+      <span>{{ pageTitle }}</span>
     </h1>
     <div class="shirts-page__wrap">
       <div class="shirts-page__filters">
@@ -14,6 +14,7 @@
           @selected="handleSortModeChange"
         />
         <RadioList
+          v-if="filters.sex"
           field="text"
           :items="sex"
           :checked="selectedSex"
@@ -21,12 +22,14 @@
           @checked="handleSexChanges"
         />
         <SelectList
+          v-if="filters.size"
           :items="sizes"
           field="text"
           @selected="handleSizeSelection"
         />
 
         <SelectList
+          v-if="filters.color"
           :items="availableColors"
           field="name"
           image="image"
@@ -35,6 +38,7 @@
         />
 
         <ToggleUi
+          v-if="filters.isNew"
           :legend="t('newOnly')"
           :status="onlyNew"
           @checked="handleIsNewOnly"
@@ -53,30 +57,48 @@
 </template>
 
 <script setup>
-import { getProducts } from "@/services/products.service.js";
-import { getSizes } from "@/services/sizes.service.js";
 import { useI18n } from "vue-i18n";
 import { computed, reactive, ref, watch} from "vue";
 import ProductCard from "@/components/ui/ProductCard.vue";
 import SelectList from "@/components/ui/SelectList.vue";
 import RadioList from "@/components/ui/RadioList.vue";
-import {imageUrl} from "@/utils/imageUrl.js";
 import ToggleUi from "@/components/ui/ToggleUi.vue";
 import SelectUi from "@/components/ui/SelectUi.vue";
-import {sortByField} from "@/utils/sorting.js";
 
+import { imageUrl } from "@/utils/imageUrl.js";
+import { sortByField } from "@/utils/sorting.js";
+import { getProducts } from "@/services/products.service.js";
+import { getSizes } from "@/services/sizes.service.js";
+import { getCategories } from "@/services/categories.service.js";
 
+const $props = defineProps({
+  categoryId: {
+    type: Number,
+    default: 1
+  },
+  // filter: {
+  //  sex: Boolean,
+  //  size: Boolean,
+  //  color: Boolean,
+  //  isNew: Boolean,
+  filters: {
+    type: Object,
+    default: () => {}
+  }
+})
+
+const pageTitle = ref('')
+const pageSubTitle = ref('')
 const products = ref([])
 const sizes = ref([])
 const onlyNew = ref(false)
 const reqParams = reactive({
-  categoryId: 2
+  categoryId: $props.categoryId
 })
 
 const { locale, t } = useI18n({
   messages: {
     en: {
-      title: "T-Shirts",
       title1: "Sizes for",
       man: "Men",
       woman: "Women",
@@ -91,7 +113,6 @@ const { locale, t } = useI18n({
       }
     },
     uk: {
-      title: "Футболки",
       title1: "Розміри для",
       man: "Чоловіків",
       woman: "Жінок",
@@ -197,7 +218,10 @@ watch(
 )
 
 const fetchData = async () => {
-  products.value = await getProducts(locale.value,{ categoryId: 2 });
+  const temp = await getCategories($props.categoryId, locale.value)
+  pageTitle.value = temp[0][`name_${locale.value}`]
+  pageSubTitle.value = temp[0][`description_${locale.value}`]
+  products.value = await getProducts(locale.value,{ categoryId: $props.categoryId });
   sizes.value = await getSizes({ params: { sex: sex[0].id }});
 };
 fetchData()

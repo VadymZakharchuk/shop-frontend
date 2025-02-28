@@ -11,8 +11,7 @@ const ForgotPassword = () => import('@/components/auth/ForgotPassword.vue')
 const SignUpLayout  =() => import('@/layouts/SignUpLayout.vue')
 const StockBackpacks = () => import('@/pages/StockBackpacks.vue')
 const StockCups = () => import('@/pages/StockCups.vue')
-const StockHoodies = () => import('@/pages/StockHoodies.vue')
-const StockTshirts = () => import('@/pages/StockTshirts.vue')
+const ProductPage = () => import('@/pages/ProductPage.vue')
 const UserCabinet = () => import('@/pages/UserCabinet.vue')
 
 const routes = [
@@ -66,19 +65,52 @@ const routes = [
   },
   {
     path: '/khudi', component: DefaultLayout,
-    children: [{path: '', name: 'hoodies__uk', component: StockHoodies}]
+    children: [{path: '', name: 'hoodies__uk', component: ProductPage, props: {
+        categoryId: 1,
+        filters: {
+          sex: true,
+          size: true,
+          color: true,
+          isNew: true
+        }
+      }
+    }]
   },
   {
     path: '/hoodies', component: DefaultLayout,
-    children: [{path: '', name: 'hoodies__en', component: StockHoodies}]
+    children: [{path: '', name: 'hoodies__en', component: ProductPage, props: {
+        categoryId: 1,
+        filters: {
+          sex: true,
+          size: true,
+          color: true,
+          isNew: true
+        }
+      }}]
   },
   {
     path: '/futbolky', component: DefaultLayout,
-    children: [{path: '', name: 'tshirts__uk', component: StockTshirts}]
+    children: [{path: '', name: 'tshirts__uk', component: ProductPage, props: {
+        categoryId: 2,
+        filters: {
+          sex: true,
+          size: true,
+          color: true,
+          isNew: true
+        }
+      }}]
   },
   {
     path: '/tshirts', component: DefaultLayout,
-    children: [{path: '', name: 'tshirts__en', component: StockTshirts}]
+    children: [{path: '', name: 'tshirts__en', component: ProductPage, props: {
+        categoryId: 2,
+        filters: {
+          sex: true,
+          size: true,
+          color: true,
+          isNew: true
+        }
+      }}]
   },
 ]
 
