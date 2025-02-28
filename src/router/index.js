@@ -9,9 +9,8 @@ import DefaultLayout from "@/layouts/DefaultLayout.vue";
 const SignIn = () => import('@/components/auth/SignIn.vue')
 const ForgotPassword = () => import('@/components/auth/ForgotPassword.vue')
 const SignUpLayout  =() => import('@/layouts/SignUpLayout.vue')
-const StockBackpacks = () => import('@/pages/StockBackpacks.vue')
-const StockCups = () => import('@/pages/StockCups.vue')
 const ProductPage = () => import('@/pages/ProductPage.vue')
+const ProductDetails = () => import('@/pages/ProductDetails.vue')
 const UserCabinet = () => import('@/pages/UserCabinet.vue')
 
 const routes = [
@@ -49,19 +48,79 @@ const routes = [
   },
   {
     path: '/rukzaky', component: DefaultLayout,
-    children: [{ path: '', name: 'backpacks__uk', component: StockBackpacks }]
+    children: [{ path: '', name: 'backpacks__uk', component: ProductPage, props: {
+        categoryId: 4,
+        filters: {
+          sex: false,
+          size: false,
+          color: true,
+          isNew: true
+        }
+      }
+    }]
   },
   {
     path: '/backpacks', component: DefaultLayout,
-    children: [{ path: '', name: 'backpacks__en', component: StockBackpacks }]
+    children: [{ path: '', name: 'backpacks__en', component: ProductPage, props: {
+        categoryId: 4,
+        filters: {
+          sex: false,
+          size: false,
+          color: true,
+          isNew: true
+        }
+      }
+    }]
+  },
+  {
+    path: '/rukzaky/:id', component: DefaultLayout,
+    children: [{path: '', name: 'backpacks-detail__uk', component: ProductDetails, props: {
+        categoryId: 4,
+      }}]
+  },
+  {
+    path: '/backpacks/:id', component: DefaultLayout,
+    children: [{path: '', name: 'backpacks-detail__en', component: ProductDetails, props: {
+        categoryId: 4,
+      }}]
   },
   {
     path: '/chashky', component: DefaultLayout,
-    children: [{ path: '', name: 'cups__uk', component: StockCups }]
+    children: [{ path: '', name: 'cups__uk', component: ProductPage, props: {
+        categoryId: 3,
+        filters: {
+          sex: false,
+          size: false,
+          color: true,
+          isNew: true
+        }
+      }
+    }]
   },
   {
     path: '/cups', component: DefaultLayout,
-    children: [{ path: '', name: 'cups__en', component: StockCups}]
+    children: [{ path: '', name: 'cups__en', component: ProductPage, props: {
+        categoryId: 3,
+        filters: {
+          sex: false,
+          size: false,
+          color: true,
+          isNew: true
+        }
+      }
+    }]
+  },
+  {
+    path: '/chashky/:id', component: DefaultLayout,
+    children: [{path: '', name: 'cups-detail__uk', component: ProductDetails, props: {
+        categoryId: 3,
+      }}]
+  },
+  {
+    path: '/cups/:id', component: DefaultLayout,
+    children: [{path: '', name: 'cups-detail__en', component: ProductDetails, props: {
+        categoryId: 3,
+      }}]
   },
   {
     path: '/khudi', component: DefaultLayout,
@@ -89,6 +148,18 @@ const routes = [
       }}]
   },
   {
+    path: '/khudi/:id', component: DefaultLayout,
+    children: [{path: '', name: 'hoodie-detail__uk', component: ProductDetails, props: {
+        categoryId: 1,
+      }}]
+  },
+  {
+    path: '/hoodies/:id', component: DefaultLayout,
+    children: [{path: '', name: 'hoodie-detail__en', component: ProductDetails, props: {
+        categoryId: 1,
+      }}]
+  },
+  {
     path: '/futbolky', component: DefaultLayout,
     children: [{path: '', name: 'tshirts__uk', component: ProductPage, props: {
         categoryId: 2,
@@ -110,6 +181,18 @@ const routes = [
           color: true,
           isNew: true
         }
+      }}]
+  },
+  {
+    path: '/futbolky/:id', component: DefaultLayout,
+    children: [{path: '', name: 'tshirt-detail__uk', component: ProductDetails, props: {
+        categoryId: 2,
+      }}]
+  },
+  {
+    path: '/tshirts/:id', component: DefaultLayout,
+    children: [{path: '', name: 'tshirt-detail__en', component: ProductDetails, props: {
+        categoryId: 2,
       }}]
   },
 ]

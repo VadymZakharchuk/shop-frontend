@@ -1,8 +1,9 @@
 <template>
   <div class="product-card">
-    <div
+    <router-link
       class="product-card__icons"
       :style="cardStyle"
+      :to="handleCardClick()"
     >
       <div
         v-if="product.is_new"
@@ -18,14 +19,14 @@
       </div>
       <a
         class="product-card__icons-fav"
-        @click="handleFavClick"
+        @click.prevent="handleFavClick"
       >
         <img
           :src="isFav ? '/img/fav-on.png' : '/img/fav-off.png'"
           alt="favourite"
         >
       </a>
-    </div>
+    </router-link>
     <div
       v-if="isBuyBtn"
       class="product-card__info"
@@ -115,6 +116,21 @@ const handleFavClick = async () => {
     await userStore.addFavourite($props.product.id)
   }
 }
+
+const handleCardClick = () => {
+  console.log('card click')
+  switch($props.product.category.id) {
+    case 1:
+      return { name: `hoodie-detail__${locale.value}`, params: { id: $props.product.id } }
+    case 2:
+      return { name: `hoodie-detail__${locale.value}`, params: { id: $props.product.id } }
+    case 3:
+      return { name: `cups-detail__${locale.value}`, params: { id: $props.product.id } }
+    default:
+      return { name: `backpacks-detail__${locale.value}`, params: { id: $props.product.id } }
+  }
+}
+
 
 const inBasket = computed(() => {
   const data = basketStore.userBasket
