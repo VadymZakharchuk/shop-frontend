@@ -6,6 +6,7 @@ export const useUserStore = defineStore('initStore', {
   state: () => ({
     user: {},
     favourites: [],
+    rubrics: [],
   }),
   persist: true,
   getters: {
@@ -15,6 +16,9 @@ export const useUserStore = defineStore('initStore', {
     },
     userFavourites({ favourites }) {
       return favourites
+    },
+    appRubrics({ rubrics }) {
+      return rubrics
     }
   },
   actions: {

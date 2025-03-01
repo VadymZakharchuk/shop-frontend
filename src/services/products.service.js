@@ -16,3 +16,14 @@ export const getProducts = async (lang, params) => {
     })
   return response.data
 }
+
+export const getProduct = async (lang, id) => {
+  const response = await Api.get(`/products`,
+    {
+      headers: { 'accept-language': lang },
+      params: {
+        id: id
+      }
+    })
+  return response.data[0]
+}

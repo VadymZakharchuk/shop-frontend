@@ -118,16 +118,16 @@ const handleFavClick = async () => {
 }
 
 const handleCardClick = () => {
-  console.log('card click')
+  const params = { id: $props.product.id}
   switch($props.product.category.id) {
     case 1:
-      return { name: `hoodie-detail__${locale.value}`, params: { id: $props.product.id } }
+      return { name: `hoodie-detail__${locale.value}`, params: { ...params } }
     case 2:
-      return { name: `hoodie-detail__${locale.value}`, params: { id: $props.product.id } }
+      return { name: `hoodie-detail__${locale.value}`, params: { ...params } }
     case 3:
-      return { name: `cups-detail__${locale.value}`, params: { id: $props.product.id } }
+      return { name: `cups-detail__${locale.value}`, params: { ...params } }
     default:
-      return { name: `backpacks-detail__${locale.value}`, params: { id: $props.product.id } }
+      return { name: `backpacks-detail__${locale.value}`, params: { ...params } }
   }
 }
 

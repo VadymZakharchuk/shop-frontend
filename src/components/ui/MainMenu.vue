@@ -62,8 +62,10 @@ const iconUserColor = computed(() => {
 )
 
 const rubrics = ref([])
-async function fetchCategories() { rubrics.value = await getCategories(locale.value) }
-fetchCategories()
+async function fetchCategories() { rubrics.value = await getCategories(0, locale.value) }
+
+if (userStore.appRubrics.length === 0) fetchCategories()
+else rubrics.value = userStore.appRubrics
 
 </script>
 
