@@ -181,7 +181,7 @@ const handleBuyClick = () => {
       @apply text-cyan-900 text-xl font-medium mt-2;
     }
     &-offer {
-      @apply flex flex-row justify-between items-center;
+      @apply flex flex-row justify-between items-center w-full;
       @apply text-gray-800 text-lg font-medium mt-2;
     }
   }

@@ -9,6 +9,8 @@ export const getProducts = async (lang, params) => {
   if ('size' in params) pars.size = params.size
   if ('colorId' in params) pars.colorId = params.colorId
   if ('is_new' in params) pars.is_new = params.is_new
+  if ('name_uk' in params) pars.name_uk = params.name_uk
+  if ('name_en' in params) pars.name_en = params.name_en
   const response = await Api.get(`/products`,
     {
       headers: { 'accept-language': lang },
@@ -26,4 +28,9 @@ export const getProduct = async (lang, id) => {
       }
     })
   return response.data[0]
+}
+
+export const increaseCounter = async (id, token) => {
+  const response = await Api.put(`/products/counter/${id}`, {token: token})
+  return response.data
 }
