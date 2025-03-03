@@ -1,31 +1,34 @@
 <template>
   <div class="product-details">
-    <div class="product-details__wrap">
+    <div
+      v-if="isReady"
+      class="product-details__wrap"
+    >
       <img
         class="product-details__image"
-        :src="imageUrl(product.image)"
-        :alt="product[`name_${locale}`]"
+        :src="imageUrl(activeProduct.image)"
+        :alt="activeProduct[`name_${locale}`]"
       >
       <div class="product-details__content">
         <h1 class="product-details__title">
-          <span>{{ product[`name_${locale}`] }}</span>
+          <span>{{ activeProduct[`name_${locale}`] }}</span>
         </h1>
         <p class="product-details__code">
-          {{ t('code') }}: {{ product.code }}
+          {{ t('code') }}: {{ activeProduct.code }}
         </p>
         <p class="product-details__offer">
-          <span class="mr-8">{{ productPrice }}</span>
+          <span class="mr-8">{{ activeProduct.price }}</span>
           <span
-            v-if="product.discount"
+            v-if="activeProduct.discount"
             class="text-gray-400 line-through"
           >
-            {{ fullPrice }}
+            {{ activeProduct.fullPrice }}
           </span>
           <span v-else> &nbsp; &nbsp; </span>
         </p>
         <div class="product-details__description">
           <span class="text-gray-400 my-2">{{ t('description') }}:</span>
-          <div>{{ product[`description_${locale}`] }}</div>
+          <div>{{ activeProduct[`description_${locale}`] }}</div>
         </div>
         <div class="product-details__views">
           <svg
@@ -42,7 +45,7 @@
               <path d="M16.108 10.044c-3.313 0-6 2.687-6 6s2.687 6 6 6 6-2.686 6-6-2.686-6-6-6zM16.108 20.044c-2.206 0-4.046-1.838-4.046-4.044s1.794-4 4-4c2.206 0 4 1.794 4 4s-1.748 4.044-3.954 4.044zM31.99 15.768c-0.012-0.050-0.006-0.104-0.021-0.153-0.006-0.021-0.020-0.033-0.027-0.051-0.011-0.028-0.008-0.062-0.023-0.089-2.909-6.66-9.177-10.492-15.857-10.492s-13.074 3.826-15.984 10.486c-0.012 0.028-0.010 0.057-0.021 0.089-0.007 0.020-0.021 0.030-0.028 0.049-0.015 0.050-0.009 0.103-0.019 0.154-0.018 0.090-0.035 0.178-0.035 0.269s0.017 0.177 0.035 0.268c0.010 0.050 0.003 0.105 0.019 0.152 0.006 0.023 0.021 0.032 0.028 0.052 0.010 0.027 0.008 0.061 0.021 0.089 2.91 6.658 9.242 10.428 15.922 10.428s13.011-3.762 15.92-10.422c0.015-0.029 0.012-0.058 0.023-0.090 0.007-0.017 0.020-0.030 0.026-0.050 0.015-0.049 0.011-0.102 0.021-0.154 0.018-0.090 0.034-0.177 0.034-0.27 0-0.088-0.017-0.175-0.035-0.266zM16 25.019c-5.665 0-11.242-2.986-13.982-8.99 2.714-5.983 8.365-9.047 14.044-9.047 5.678 0 11.203 3.067 13.918 9.053-2.713 5.982-8.301 8.984-13.981 8.984z" />
             </g>
           </svg>
-          <span class="ml-2">{{ product.views_count }}</span>
+          <span class="ml-2">{{ activeProduct.views_count }}</span>
         </div>
       </div>
     </div>
@@ -50,10 +53,10 @@
 </template>
 
 <script setup>
-import { defineProps, ref} from 'vue';
+import {computed, defineProps, ref} from 'vue';
 import { useRoute } from 'vue-router';
 import { useI18n } from "vue-i18n";
-import { getProduct, getProducts, increaseCounter } from "@/services/products.service.js";
+import { getProductAndAnalogs, increaseCounter} from "@/services/products.service.js";
 import { imageUrl } from "@/utils/imageUrl.js";
 import {toCurrencyString} from "@/utils/toCurrencyString.js";
 import Cookies from "js-cookie";
@@ -85,22 +88,24 @@ const { locale, t } = useI18n({
   }
 })
 
+const isReady = ref(false)
 const product = ref({})
-const analogs = ref([])
-const productPrice = ref(0)
-const fullPrice = ref(0)
+const pIndex = ref(0)
+
+const activeProduct = computed(() => isReady.value ? product.value[pIndex.value] : {})
 
 const getProductData = async () => {
-  let isAdmin = false
-  product.value = await getProduct(locale.value, route.params.id)
-  productPrice.value = toCurrencyString(product.value.price, locale.value)
-  const params = locale.value === 'uk' ? { name_uk: product.value.name_uk } : { name_en: product.value.name_en };
-  fullPrice.value = toCurrencyString( +product.value.price + +product.value.discount, 1, locale.value)
-  analogs.value = await getProducts(locale.value, { ...params })
+  product.value = await getProductAndAnalogs(locale.value, route.params.id)
+  product.value.forEach(item => {
+    item.fullPrice = toCurrencyString(+item.price + +item.discount, 1, locale.value)
+    item.price = toCurrencyString(item.price, locale.value)
+    return { ...item }
+  })
   const token = Cookies.get('auth-token')
   const decoded = token ? jwtDecode(token) : undefined
-  isAdmin = decoded ? !!decoded.isAdmin : false
+  const isAdmin = decoded ? !!decoded.isAdmin : false
   await increaseCounter(route.params.id, isAdmin)
+  isReady.value = true
 };
 getProductData()
 </script>

@@ -2,7 +2,6 @@ import Api from './api/api'
 
 export const getProducts = async (lang, params) => {
   const pars = {}
-
   if ('categoryId' in params) pars.categoryId = params.categoryId
   if ('limit' in params) pars.limit = params.limit
   if ('offset' in params) pars.offset = params.offset
@@ -11,6 +10,7 @@ export const getProducts = async (lang, params) => {
   if ('is_new' in params) pars.is_new = params.is_new
   if ('name_uk' in params) pars.name_uk = params.name_uk
   if ('name_en' in params) pars.name_en = params.name_en
+
   const response = await Api.get(`/products`,
     {
       headers: { 'accept-language': lang },
@@ -27,7 +27,28 @@ export const getProduct = async (lang, id) => {
         id: id
       }
     })
-  return response.data[0]
+  return response.data
+}
+
+export const getProductAndAnalogs = async (lang, id) => {
+  const response = await Api.get(`/products`,
+    {
+      headers: { 'accept-language': lang },
+      params: {
+        id: id
+      }
+    })
+  response.data[0].origin = true
+  const params = {
+    [`name_${lang}`]: response.data[0][`name_${lang}`],
+    categoryId: response.data[0].categoryId,
+  }
+  const analogs = await getProducts(lang, {...params})
+  const temp = analogs.filter((item) => {
+    item.origin = false
+    return item.id !== response.data[0].id
+  })
+  return [...response.data, ...temp]
 }
 
 export const increaseCounter = async (id, token) => {
