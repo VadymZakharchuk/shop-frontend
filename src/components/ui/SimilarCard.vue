@@ -1,5 +1,8 @@
 <template>
   <div class="similar-card">
+    <h3 class="similar-card__info-title">
+      {{ productName }}
+    </h3>
     <div
       class="similar-card__icons"
       :style="cardStyle"
@@ -18,20 +21,21 @@
         <span class="relative right-1" />
       </div>
     </div>
-
-    <h3 class="similar-card__info-title">
-      {{ productName }}
-    </h3>
     <div class="similar-card__info-offer">
-      <span>{{ t('color') }} {{ product.colors[`name_${locale}`] }}</span>
-      <span class="self-center">{{ product.price }}</span>
-      <span
-        v-if="product.discount"
-        class="text-gray-400 line-through"
-      >
-        {{ product.fullPrice }}
-      </span>
-      <span v-else> &nbsp; &nbsp; </span>
+      <div class="similar-card__info-offer-row">
+        <span>{{ t('color') }} {{ product.colors[`name_${locale}`] }}</span>
+        <span>{{ t('size') }} {{ product.size.toUpperCase() }}</span>
+      </div>
+      <div class="similar-card__info-offer-row">
+        <span class="self-center">{{ product.price }}</span>
+        <span
+          v-if="product.discount"
+          class="text-gray-400 line-through"
+        >
+          {{ product.fullPrice }}
+        </span>
+        <span v-else> &nbsp; &nbsp; </span> 
+      </div>
     </div>
   </div>
 </template>
@@ -44,8 +48,8 @@ import { imageUrl } from "@/utils/imageUrl.js";
 
 const { locale, t } = useI18n({
   messages: {
-    en: { color: "Color" },
-    uk: { color: "Колір" },
+    en: { color: "Color", size: "Size" },
+    uk: { color: "Колір", size: "Розмір" },
   }
 })
 
@@ -90,21 +94,19 @@ const cardStyle = computed(() => ({
       @apply bg-transparent;
       @apply rounded-full p-2 w-10 h-10 relative;
     }
-    &-fav {
-      @apply bg-white font-medium;
-      @apply rounded-full p-2 w-10 h-10;
-      @apply hover:scale-110;
-    }
   }
   &__info {
     @apply flex flex-col items-center;
-    @apply py-1;
+    @apply py-2;
     &-title {
-      @apply text-cyan-900 text-xl font-medium mt-2;
+      @apply text-cyan-900 text-xl font-medium mb-3;
     }
     &-offer {
-      @apply flex flex-row justify-between items-center w-full;
+      @apply flex flex-col justify-between items-center w-full;
       @apply text-gray-800 text-base font-medium mt-2;
+      &-row {
+        @apply flex flex-row justify-between items-center w-full px-8;
+      }
     }
   }
 }

@@ -12,6 +12,15 @@
       <div class="product-details__content">
         <h1 class="product-details__title">
           <span>{{ activeProduct[`name_${locale}`] }}</span>
+          <a
+            class="product-details__icons-fav"
+            @click.prevent="handleFavClick"
+          >
+            <img
+              :src="isFav ? '/img/fav-on.png' : '/img/fav-off.png'"
+              alt="favourite"
+            >
+          </a>
         </h1>
         <p class="product-details__code">
           {{ t('code') }}: {{ activeProduct.code }}
@@ -36,6 +45,12 @@
           <IconEye />
           <span class="ml-2">{{ activeProduct.views_count }}</span>
         </div>
+        <BtnBuy
+          :btn-text="inBasket ? t('inBasket') : t('toBasket')"
+          :in-basket="inBasket"
+          class="mt-4"
+          @clicked="handleBuyClick"
+        />
       </div>
     </div>
     <div class="product-details__title">
@@ -77,6 +92,9 @@ import { jwtDecode } from "jwt-decode";
 import 'vue3-carousel/carousel.css'
 import { Carousel, Slide, Navigation } from 'vue3-carousel'
 import SimilarCard from "@/components/ui/SimilarCard.vue";
+import BtnBuy from "@/components/ui/BtnBuy.vue";
+import { useUserStore } from "@/store/user.js";
+import { useBasketStore } from "@/store/basket.js";
 
 defineProps({
   categoryId: {
@@ -95,6 +113,8 @@ const { locale, t } = useI18n({
       views: "Views",
       code: "Code",
       similarGoods: "Similar goods",
+      toBasket: "To basket",
+      inBasket: "In basket",
     },
     uk: {
       name: "Назва",
@@ -104,6 +124,8 @@ const { locale, t } = useI18n({
       views: "Перегляди",
       code: "Код товару",
       similarGoods: "Схожі товари",
+      toBasket: "До кошику",
+      inBasket: "У кошику",
     },
   }
 })
@@ -111,8 +133,19 @@ const { locale, t } = useI18n({
 const isReady = ref(false)
 const product = ref({})
 const pIndex = ref(0)
+const userStore = useUserStore();
+const basketStore = useBasketStore();
 
 const activeProduct = computed(() => isReady.value ? product.value[pIndex.value] : {})
+const isFav = computed(() => {
+  const data = userStore.userFavourites
+  return data.find(item => item.productId === activeProduct.value.id) !== undefined
+})
+const inBasket = computed(() => {
+  const data = basketStore.userBasket
+  if(!data) return false
+  return basketStore.basket.find(item => item.product.id === +$props.product.id) !== undefined
+})
 const getProductData = async () => {
   product.value = await getProductAndAnalogs(locale.value, route.params.id)
   product.value.forEach(item => {
@@ -155,6 +188,22 @@ const handleCardClick = (item) => {
   pIndex.value = product.value.findIndex(t => t.id === item.id)
   window.scrollTo(0, 0)
 }
+const handleFavClick = async () => {
+  if (isFav.value) {
+    await userStore.removeFavourite(activeProduct.value.id)
+  } else {
+    await userStore.addFavourite(activeProduct.value.id)
+  }
+}
+const handleBuyClick = () => {
+  const basket = basketStore.basket
+  const isPresent = basket.find(item => item.product.id === activeProduct.value.id)
+  if (basketStore.basket.length > 0 && isPresent)  return
+  basketStore.basket.push({
+    product: activeProduct.value,
+    quantity: 1
+  })
+}
 </script>
 
 <style scoped lang="scss">
@@ -166,14 +215,15 @@ const handleCardClick = (item) => {
     @apply flex flex-row items-start justify-start font-roboto mb-8;
   }
   &__title {
-    @apply text-2xl text-black font-bold mb-4;
+    @apply text-2xl text-black font-bold mb-4 pr-8 w-full;
+    @apply flex flex-row items-start justify-between;
   }
   &__image {
     @apply w-[40%] h-auto object-cover mr-8 rounded-lg shadow-lg;
   }
   &__content {
     @apply w-[60%] h-auto pl-4 text-choice-normal font-normal;
-    @apply flex flex-col items-start justify-start;
+    @apply flex flex-col items-start justify-between;
   }
   &__code {
     @apply text-gray-400 text-sm my-2;
@@ -186,6 +236,13 @@ const handleCardClick = (item) => {
 
     svg {
       @apply w-6 h-auto;
+    }
+  }
+  &__icons {
+    &-fav {
+      @apply bg-gray-50 font-medium;
+      @apply rounded-full p-2 w-10 h-10;
+      @apply hover:scale-110;
     }
   }
 }

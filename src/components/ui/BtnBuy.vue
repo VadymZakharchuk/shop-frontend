@@ -51,7 +51,7 @@ const handleClick = () => {
   @apply relative px-10 py-3 font-medium text-white transition duration-300 rounded-md;
 
   &__span {
-    @apply absolute bottom-0 left-0 h-full -ml-2;
+    @apply absolute bottom-0 left-0 h-full;
     svg {
       @apply w-auto h-full opacity-100 object-cover;
     }
