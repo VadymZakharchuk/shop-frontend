@@ -36,10 +36,23 @@
           <span v-else> &nbsp; &nbsp; </span>
         </p>
         <div class="product-details__description">
-          <span class="text-gray-400 my-2">{{ t('color') }}:</span>
-          <div class="mb-2">{{ activeProduct.colors[`name_${locale}`] }}</div>
+          <div class="product-details__sizeColor">
+            <span class="text-gray-400 w-1/2">{{ t('color') }}:</span>
+            <span>{{ activeProduct.colors[`name_${locale}`] }}</span>
+          </div>
+          <div class="product-details__sizeColor mb-2">
+            <span
+              v-if="activeProduct.size"
+              class="text-gray-400 w-1/2"
+            >{{ t('size') }}:</span>
+            <span v-if="activeProduct.size">
+              {{ activeProduct.size.toUpperCase() }}
+            </span>
+          </div>
           <span class="text-gray-400 my-2">{{ t('description') }}:</span>
-          <div class="mb-2">{{ activeProduct[`description_${locale}`] }}</div>
+          <div class="mb-2">
+            {{ activeProduct[`description_${locale}`] }}
+          </div>
         </div>
         <div class="product-details__views">
           <IconEye />
@@ -110,6 +123,7 @@ const { locale, t } = useI18n({
       description: "Description",
       color: "Color",
       price: "Price",
+      size: "Size",
       views: "Views",
       code: "Code",
       similarGoods: "Similar goods",
@@ -121,6 +135,7 @@ const { locale, t } = useI18n({
       description: "Опис",
       color: "Колір",
       price: "Ціна",
+      size: "Розмір",
       views: "Перегляди",
       code: "Код товару",
       similarGoods: "Схожі товари",
@@ -144,7 +159,7 @@ const isFav = computed(() => {
 const inBasket = computed(() => {
   const data = basketStore.userBasket
   if(!data) return false
-  return basketStore.basket.find(item => item.product.id === +$props.product.id) !== undefined
+  return basketStore.basket.find(item => item.product.id === +activeProduct.value.id) !== undefined
 })
 const getProductData = async () => {
   product.value = await getProductAndAnalogs(locale.value, route.params.id)
@@ -227,6 +242,9 @@ const handleBuyClick = () => {
   }
   &__code {
     @apply text-gray-400 text-sm my-2;
+  }
+  &__sizeColor {
+    @apply flex flex-row items-center justify-start w-[25%];
   }
   &__offer {
     @apply text-lg text-black font-semibold my-2;
