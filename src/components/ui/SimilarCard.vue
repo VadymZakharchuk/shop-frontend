@@ -23,11 +23,21 @@
     </div>
     <div class="similar-card__info-offer">
       <div class="similar-card__info-offer-row">
-        <span>{{ t('color') }} {{ product.colors[`name_${locale}`] }}</span>
-        <span>{{ t('size') }} {{ product.size.toUpperCase() }}</span>
+        <div>
+          <span class="text-gray-400 mr-2">{{ t('color') }}</span>
+          <span class="font-semibold">{{ product.colors[`name_${locale}`] }}</span>
+        </div>
+        <div>
+          <span class="text-gray-400 mr-2">{{ t('size') }}</span>
+          <span class="font-semibold">{{ product.size.toUpperCase() }}</span>
+        </div>
       </div>
       <div class="similar-card__info-offer-row">
-        <span class="self-center">{{ product.price }}</span>
+        <div>
+          <span class="text-gray-400 mr-2">{{ t('price') }}</span>
+          <span class="font-semibold">{{ product.price }}</span>
+        </div>
+
         <span
           v-if="product.discount"
           class="text-gray-400 line-through"
@@ -48,8 +58,8 @@ import { imageUrl } from "@/utils/imageUrl.js";
 
 const { locale, t } = useI18n({
   messages: {
-    en: { color: "Color", size: "Size" },
-    uk: { color: "Колір", size: "Розмір" },
+    en: { color: "Color", size: "Size", price: "Price: " },
+    uk: { color: "Колір", size: "Розмір", price: "Ціна: " },
   }
 })
 
