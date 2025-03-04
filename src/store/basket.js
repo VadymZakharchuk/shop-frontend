@@ -13,6 +13,9 @@ export const useBasketStore = defineStore('basketStore', {
   actions: {
     clearBasket() {
       this.basket = []
+    },
+    deleteItem(id) {
+      this.basket = this.basket.filter(item => item.product.id !== id)
     }
   }
 })

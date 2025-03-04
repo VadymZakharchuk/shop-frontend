@@ -25,11 +25,17 @@
           @update:counter="item.quantity = $event"
         />
         <span class="w-1/5 text-end pr-8">{{ toCurrencyString(itemSum(item), locale) }}</span>
+        <a @click="handleDeleteItem(item)">
+          <IconDelete class="w-6 h-auto" />
+        </a>
       </p>
       <p class="basket-page__total">
         {{ t('total') }}: {{ toCurrencyString(basketTotal(), locale) }}
       </p>
-      <BtnBuy :btn-text="t('order')" class="basket-page__order" />
+      <BtnBuy
+        :btn-text="t('order')"
+        class="basket-page__order"
+      />
     </div>
     <div
       v-else
@@ -48,6 +54,8 @@ import { imageUrl } from "@/utils/imageUrl.js";
 import CounterUi from "@/components/ui/CounterUi.vue";
 import { toCurrencyString } from "@/utils/toCurrencyString.js";
 import BtnBuy from "@/components/ui/BtnBuy.vue";
+import IconDelete from "@/components/ui/icons/IconDelete.vue";
+import { ref, watch} from "vue";
 
 const { t, locale } = useI18n({
   messages: {
@@ -67,14 +75,26 @@ const { t, locale } = useI18n({
 })
 
 const basketStore = useBasketStore()
-const basket = basketStore.userBasket
+const basket = ref(basketStore.userBasket)
+
+watch(
+  () => basketStore.userBasket.value,
+  () => {
+    basket.value = basketStore.userBasket
+  },
+  { deep: true }
+)
 
 const itemSum = (item) => {
   return item.product.price * item.quantity
 }
 
 const basketTotal = () => {
-  return basket.reduce((acc, item) => acc + itemSum(item), 0)
+  return basket.value.reduce((acc, item) => acc + itemSum(item), 0)
+}
+
+const handleDeleteItem = (item) => {
+  basketStore.deleteItem(item.product.id)
 }
 </script>
 
@@ -96,11 +116,11 @@ const basketTotal = () => {
 
   &__item {
     @apply flex flex-row justify-start items-center;
-    @apply text-lg text-black w-full;
+    @apply text-lg text-gray-800 w-full;
     @apply border-b-2 border-gray-300 py-2;
 
     &-image {
-      @apply w-24 h-24 mr-4;
+      @apply w-24 h-24 mr-4 rounded-md shadow-lg;
     }
   }
   &__counter {
