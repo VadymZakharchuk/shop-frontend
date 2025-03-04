@@ -12,6 +12,7 @@ const SignUpLayout  =() => import('@/layouts/SignUpLayout.vue')
 const ProductPage = () => import('@/pages/ProductPage.vue')
 const ProductDetails = () => import('@/pages/ProductDetails.vue')
 const UserCabinet = () => import('@/pages/UserCabinet.vue')
+const UserBasket = () => import('@/pages/UserBasket.vue')
 
 const routes = [
   {
@@ -45,6 +46,14 @@ const routes = [
   {
     path: '/cabinet', component: DefaultLayout,
     children: [{ path: '', name: 'cabinet__en', component: UserCabinet }],
+  },
+  {
+    path: '/koshik', component: DefaultLayout,
+    children: [{ path: '', name: 'basket__uk', component: UserBasket }],
+  },
+  {
+    path: '/basket', component: DefaultLayout,
+    children: [{ path: '', name: 'basket__en', component: UserBasket }],
   },
   {
     path: '/rukzaky', component: DefaultLayout,
@@ -203,7 +212,6 @@ const router = createRouter({
 })
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore()
-  const basketStore = useBasketStore()
   const lang = from.name?.includes('__uk') ? 'uk' : 'en'
   let token = Cookies.get('auth-token')
   if (token) {
@@ -212,9 +220,6 @@ router.beforeEach((to, from, next) => {
       Cookies.remove('auth-token')
       token = ''
     }
-  }
-  else {
-    basketStore.clearBasket()
   }
 
   if (to.path.includes('cabinet') && !userStore.isLoggedInAndHasToken) next({ name: `login__${lang}` })

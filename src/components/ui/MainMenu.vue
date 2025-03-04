@@ -14,15 +14,18 @@
     </div>
     <div class="main-menu__list">
       <LangSwitcher />
-      <div class="relative">
+      <RouterLink
+        :to="{ name: `basket__${locale}` }"
+        class="relative"
+      >
         <IconCart class="menu-icon text-menu-text" />
         <span
           v-if="basketCount"
           class="menu-icon__counter"
         >{{ basketCount }}
         </span>
-      </div>
-      <RouterLink :to="'/cabinet'">
+      </RouterLink>
+      <RouterLink to="/cabinet">
         <IconUser
           :class="iconUserColor"
           class="menu-icon"

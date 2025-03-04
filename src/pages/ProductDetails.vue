@@ -66,10 +66,14 @@
         />
       </div>
     </div>
-    <div class="product-details__title">
+    <div
+      v-if="product.length > 1"
+      class="product-details__title"
+    >
       <span>{{ t('similarGoods') }}</span>
     </div>
     <Carousel
+      v-if="product.length > 1"
       v-bind="carouselConfig"
       class="my-6"
     >
@@ -180,9 +184,6 @@ const carouselConfig = {
   gap: 8,
   snapAlign: 'center',
   breakpointMode: 'carousel',
-
-  // Breakpoints are mobile-first
-  // Any settings not specified will fall back to the carousel's default settings
   breakpoints: {
     // 300px and up
     300: {
