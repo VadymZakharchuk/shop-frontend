@@ -17,9 +17,14 @@
           :alt="item.product[`name_${locale}`]"
           class="basket-page__item-image"
         >
-        <span>{{ item.product[`name_${locale}`] }}</span>
-        <span>{{ item.product.price }}</span>
-        <span>{{ item.quantity }}</span>
+        <span class="w-2/5">{{ item.product[`name_${locale}`] }}</span>
+        <span class="w-1/5">{{ item.product.price }}</span>
+        <CounterUi
+          :counter="item.quantity"
+          class="basket-page__counter"
+          @update:counter="item.quantity = $event"
+        />
+        <span class="w-1/5">{{ itemSum(item) }}</span>
       </p>
     </div>
     <div
@@ -36,6 +41,7 @@
 import { useI18n } from "vue-i18n";
 import { useBasketStore } from "@/store/basket.js";
 import { imageUrl } from "@/utils/imageUrl.js";
+import CounterUi from "@/components/ui/CounterUi.vue";
 
 const { t, locale } = useI18n({
   messages: {
@@ -52,6 +58,10 @@ const { t, locale } = useI18n({
 
 const basketStore = useBasketStore()
 const basket = basketStore.userBasket
+
+const itemSum = (item) => {
+  return item.product.price * item.quantity
+}
 </script>
 
 <style scoped lang="scss">
@@ -72,12 +82,15 @@ const basket = basketStore.userBasket
 
   &__item {
     @apply flex flex-row justify-start items-center;
-    @apply text-lg text-black;
+    @apply text-lg text-black w-full;
     @apply border-b-2 border-gray-300 py-2;
 
     &-image {
       @apply w-24 h-24 mr-4;
     }
+  }
+  &__counter {
+    @apply w-1/6 h-8 mr-4;
   }
 }
 </style>
