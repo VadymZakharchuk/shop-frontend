@@ -52,7 +52,7 @@ const handleClick = (e) => {
 
 <style scoped lang="scss">
 .counter-component {
-  @apply w-full flex flex-row justify-center;
+  @apply w-full max-w-[128px] flex flex-row justify-center;
 }
 .counter-value {
   @apply w-full flex justify-center items-center text-xl;

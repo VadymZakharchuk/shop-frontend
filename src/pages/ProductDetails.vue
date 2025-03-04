@@ -26,7 +26,7 @@
           {{ t('code') }}: {{ activeProduct.code }}
         </p>
         <p class="product-details__offer">
-          <span class="mr-8">{{ activeProduct.price }}</span>
+          <span class="mr-8">{{ activeProduct.localPrice }}</span>
           <span
             v-if="activeProduct.discount"
             class="text-gray-400 line-through"
@@ -169,7 +169,7 @@ const getProductData = async () => {
   product.value = await getProductAndAnalogs(locale.value, route.params.id)
   product.value.forEach(item => {
     item.fullPrice = toCurrencyString(+item.price + +item.discount, 1, locale.value)
-    item.price = toCurrencyString(item.price, locale.value)
+    item.localPrice = toCurrencyString(item.price, locale.value)
     return { ...item }
   })
   const token = Cookies.get('auth-token')

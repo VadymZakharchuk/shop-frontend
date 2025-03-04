@@ -18,14 +18,18 @@
           class="basket-page__item-image"
         >
         <span class="w-2/5">{{ item.product[`name_${locale}`] }}</span>
-        <span class="w-1/5">{{ item.product.price }}</span>
+        <span class="w-1/5 text-end pr-8">{{ toCurrencyString(item.product.price, locale) }}</span>
         <CounterUi
           :counter="item.quantity"
           class="basket-page__counter"
           @update:counter="item.quantity = $event"
         />
-        <span class="w-1/5">{{ itemSum(item) }}</span>
+        <span class="w-1/5 text-end pr-8">{{ toCurrencyString(itemSum(item), locale) }}</span>
       </p>
+      <p class="basket-page__total">
+        {{ t('total') }}: {{ toCurrencyString(basketTotal(), locale) }}
+      </p>
+      <BtnBuy :btn-text="t('order')" class="basket-page__order" />
     </div>
     <div
       v-else
@@ -42,15 +46,21 @@ import { useI18n } from "vue-i18n";
 import { useBasketStore } from "@/store/basket.js";
 import { imageUrl } from "@/utils/imageUrl.js";
 import CounterUi from "@/components/ui/CounterUi.vue";
+import { toCurrencyString } from "@/utils/toCurrencyString.js";
+import BtnBuy from "@/components/ui/BtnBuy.vue";
 
 const { t, locale } = useI18n({
   messages: {
     en: {
       basket: 'Basket',
+      total: 'Total',
+      order: 'Make order',
       isEmpty: 'Basket is empty',
     },
     uk: {
       basket: 'Кошик',
+      total: 'Разом',
+      order: 'Зробити замовлення',
       isEmpty: 'Кошик порожній',
     }
   }
@@ -61,6 +71,10 @@ const basket = basketStore.userBasket
 
 const itemSum = (item) => {
   return item.product.price * item.quantity
+}
+
+const basketTotal = () => {
+  return basket.reduce((acc, item) => acc + itemSum(item), 0)
 }
 </script>
 
@@ -90,7 +104,14 @@ const itemSum = (item) => {
     }
   }
   &__counter {
-    @apply w-1/6 h-8 mr-4;
+    @apply h-8 mr-4;
+  }
+  &__total {
+    @apply text-xl font-semibold text-cyan-800;
+    @apply w-full mt-4 text-end pr-8;
+  }
+  &__order {
+    @apply my-4 w-fit text-center mx-auto;
   }
 }
 </style>
