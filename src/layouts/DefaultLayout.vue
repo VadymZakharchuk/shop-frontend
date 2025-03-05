@@ -1,5 +1,5 @@
 <template>
-  <div class="shop-main">
+  <div class="container shop-main">
     <AppHeader />
     <RouterView v-slot="{ Component }">
       <component
@@ -26,10 +26,9 @@ locale.value = routeLang;
 
 <style scoped lang="scss">
 .shop-main {
-  @apply mx-auto w-screen h-full;
+  @apply w-full h-full;
   &__page {
-    @apply w-screen h-full;
-    @apply xl:mx-auto xl:px-[96px];
+    @apply w-full h-full;
     @apply bg-blue-100;
   }
 }

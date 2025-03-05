@@ -12,6 +12,18 @@ module.exports = {
     "./src/**/*.{js,ts,jsx,tsx,vue,html}"
   ],
   theme: {
+    container: {
+      center: true,
+      padding: {
+        DEFAULT: '0px'
+      }
+    },
+    screens: {
+      'sm': '640px',
+      'md': '712px',
+      'lg': '968px',
+      'xl': '1366px'
+    },
     extend: {
       fontFamily: {
         'caveat': ['Caveat', 'sans-serif'],

@@ -1,5 +1,5 @@
 <template>
-  <div class="home-page">
+  <div class="container home-page">
     <h1 class="home-page__title">
       <span>{{ t('title') }}</span>
     </h1>

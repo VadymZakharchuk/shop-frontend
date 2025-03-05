@@ -239,7 +239,7 @@ fetchData()
     }
   }
   &__wrap {
-    @apply flex flex-row justify-start items-start;
+    @apply flex flex-row justify-start items-start px-[116px];
   }
   &__filters {
     @apply w-1/4 text-cyan-700;

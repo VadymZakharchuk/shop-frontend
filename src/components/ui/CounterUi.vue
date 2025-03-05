@@ -36,7 +36,7 @@ const count = ref($props.counter)
 const btnColors = {
   text: 'text-black',
   bg: 'bg-gray-300',
-  hover: 'hover:bg-gray-500',
+  hover: 'hover:bg-blue-400',
 }
 const handleClick = (e) => {
   if (e.target.id === 'decrementButton' && count.value > 0) {

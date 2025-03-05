@@ -128,7 +128,7 @@ const handleDeleteItem = (item) => {
   }
   &__total {
     @apply text-xl font-semibold text-cyan-800;
-    @apply w-full mt-4 text-end pr-8;
+    @apply w-full mt-4 text-end pr-16;
   }
   &__order {
     @apply my-4 w-fit text-center mx-auto;
