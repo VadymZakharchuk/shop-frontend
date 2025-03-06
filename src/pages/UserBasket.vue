@@ -57,7 +57,7 @@ import { toCurrencyString } from "@/utils/toCurrencyString.js";
 import BtnBuy from "@/components/ui/BtnBuy.vue";
 import IconDelete from "@/components/ui/icons/IconDelete.vue";
 import { ref, watch} from "vue";
-import { getNewOrderNo } from "@/services/orders.service.js";
+import { createOrder, getNewOrderNo} from "@/services/orders.service.js";
 import { useUserStore } from "@/store/user.js";
 
 const { t, locale } = useI18n({
@@ -105,13 +105,15 @@ const handleCreateOrder= async() => {
   const orderNo = await getNewOrderNo()
   const order = basket.value.map((item) => {
     return {
-      product_id: item.product.id,
+      productId: item.product.id,
       quantity: item.quantity,
       userId: userStore.user?.id ? userStore.user?.id : 0,
-      orderNo: orderNo.newOrderNo
+      orderNo: orderNo.newOrderNo,
+      statusId: 1
     }
   })
   console.log(order)
+  await createOrder(order)
 }
 </script>
 
