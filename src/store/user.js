@@ -19,6 +19,9 @@ export const useUserStore = defineStore('initStore', {
     },
     appRubrics({ rubrics }) {
       return rubrics
+    },
+    isAdmin({ user }) {
+      return user.isAdmin
     }
   },
   actions: {

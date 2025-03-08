@@ -6,7 +6,10 @@
       title="-"
       @click="handleClick"
     />
-    <div class="counter-value">
+    <div
+      :class="{ 'invalid-value': isInvalid }"
+      class="counter-value"
+    >
       <span
         ref="counter"
       >{{ count }}</span>
@@ -29,6 +32,10 @@ const $props = defineProps({
   counter: {
     type: Number,
     default: 0,
+  },
+  isInvalid: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -56,5 +63,8 @@ const handleClick = (e) => {
 }
 .counter-value {
   @apply w-full flex justify-center items-center text-xl;
+}
+.invalid-value {
+  @apply bg-red-600 text-white font-semibold rounded-full mx-2;
 }
 </style>

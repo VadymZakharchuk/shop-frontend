@@ -31,6 +31,12 @@
           class="menu-icon"
         />
       </RouterLink>
+      <RouterLink to="/cabinet">
+        <IconSettings
+          v-if="isAdmin"
+          class="menu-icon text-menu-text"
+        />
+      </RouterLink>
     </div>
   </div>
 </template>
@@ -45,6 +51,7 @@ import { getCategories } from '@/services/categories.service';
 import LangSwitcher from "@/components/ui/LangSwitcher.vue";
 import IconCart from "@/components/ui/icons/IconCart.vue";
 import IconUser from "@/components/ui/icons/IconUser.vue";
+import IconSettings from "@/components/ui/icons/IconSettings.vue";
 
 const { locale } = useI18n()
 const menuData = computed(() => {
@@ -63,13 +70,13 @@ const iconUserColor = computed(() => {
       : 'text-menu-text'
   }
 )
+const isAdmin = computed(() => userStore.isAdmin)
 
 const rubrics = ref([])
 async function fetchCategories() { rubrics.value = await getCategories(0, locale.value) }
 
 if (userStore.appRubrics.length === 0) fetchCategories()
 else rubrics.value = userStore.appRubrics
-
 </script>
 
 <style scoped lang="scss">

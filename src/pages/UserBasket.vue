@@ -21,8 +21,9 @@
         <span class="w-1/5 text-end pr-8">{{ toCurrencyString(item.product.price, locale) }}</span>
         <CounterUi
           :counter="item.quantity"
+          :is-invalid="!item.isAvailable"
           class="basket-page__counter"
-          @update:counter="item.quantity = $event"
+          @update:counter="handleCounterChange(item, $event)"
         />
         <span class="w-1/5 text-end pr-8">{{ toCurrencyString(itemSum(item), locale) }}</span>
         <a @click="handleDeleteItem(item)">
@@ -37,6 +38,12 @@
         class="basket-page__order"
         @clicked="handleCreateOrder"
       />
+      <p
+        v-if="missedGoods"
+        class="basket-page__missed"
+      >
+        {{ t('notAvailable') }}
+      </p>
     </div>
     <div
       v-else
@@ -56,7 +63,7 @@ import CounterUi from "@/components/ui/CounterUi.vue";
 import { toCurrencyString } from "@/utils/toCurrencyString.js";
 import BtnBuy from "@/components/ui/BtnBuy.vue";
 import IconDelete from "@/components/ui/icons/IconDelete.vue";
-import { ref, watch} from "vue";
+import {computed, ref, watch} from "vue";
 import { createOrder, getNewOrderNo} from "@/services/orders.service.js";
 import { useUserStore } from "@/store/user.js";
 
@@ -67,19 +74,21 @@ const { t, locale } = useI18n({
       total: 'Total',
       order: 'Make order',
       isEmpty: 'Basket is empty',
+      notAvailable: 'Selected quantity of good is missed on stock',
     },
     uk: {
       basket: 'Кошик',
       total: 'Разом',
       order: 'Зробити замовлення',
       isEmpty: 'Кошик порожній',
+      notAvailable: 'Обрана кількість товару відсутня на складі',
     }
   }
 })
-
 const basketStore = useBasketStore()
 const userStore = useUserStore()
-const basket = ref(basketStore.userBasket)
+const basket = ref(basketStore.userBasket.map((item) => { return { ...item, isAvailable: true }}))
+const missedGoods = computed(() => basket.value.some((item) => item.isAvailable === false))
 
 watch(
   () => basketStore.userBasket.value,
@@ -101,6 +110,13 @@ const handleDeleteItem = (item) => {
   basketStore.deleteItem(item.product.id)
 }
 
+const handleCounterChange = (item, event) => {
+  const index = basket.value.findIndex((el) => el.product.id === item.product.id)
+  if (index !== -1) {
+    basket.value[index].quantity = event
+    basket.value[index].isAvailable = true
+  }
+}
 const handleCreateOrder= async() => {
   const orderNo = await getNewOrderNo()
   const order = basket.value.map((item) => {
@@ -112,8 +128,15 @@ const handleCreateOrder= async() => {
       statusId: 1
     }
   })
-  console.log(order)
-  await createOrder(order)
+  const result = await createOrder(order)
+  if (result.message !== 'created') {
+    result.notAvailableProducts.forEach((item) => {
+      const index = basket.value.findIndex((el) => el.product.id === item.productId)
+      if (index !== -1) {
+        basket.value[index].isAvailable = false
+      }
+    })
+  }
 }
 </script>
 
@@ -121,7 +144,7 @@ const handleCreateOrder= async() => {
 .basket-page {
   @apply text-base text-black font-roboto py-12 px-[116px];
   &__title {
-    @apply text-3xl font-semibold text-cyan-800;
+    @apply text-3xl font-semibold text-cyan-800 px-4;
     @apply pb-8 border-b-2 border-gray-300;
   }
   &__empty {
@@ -135,7 +158,7 @@ const handleCreateOrder= async() => {
 
   &__item {
     @apply flex flex-row justify-start items-center;
-    @apply text-lg text-gray-800 w-full;
+    @apply text-lg text-gray-800 w-full px-4;
     @apply border-b-2 border-gray-300 py-2;
 
     &-image {
@@ -151,6 +174,9 @@ const handleCreateOrder= async() => {
   }
   &__order {
     @apply my-4 w-fit text-center mx-auto;
+  }
+  &__missed {
+    @apply bg-red-600 text-white text-base mt-4 p-2 rounded-lg self-center;
   }
 }
 </style>
