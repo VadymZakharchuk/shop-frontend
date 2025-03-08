@@ -137,6 +137,9 @@ const handleCreateOrder= async() => {
       }
     })
   }
+  else {
+    basketStore.clearBasket()
+  }
 }
 </script>
 
@@ -149,7 +152,7 @@ const handleCreateOrder= async() => {
   }
   &__empty {
     @apply flex items-center justify-center w-1/2 h-1/2 rounded-lg;
-    @apply mt-12 mx-auto text-xl text-gray-400 shadow-md;
+    @apply mt-12 py-12 mx-auto text-xl text-gray-400 shadow-md;
   }
 
   &__list {
