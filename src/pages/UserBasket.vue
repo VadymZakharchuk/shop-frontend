@@ -44,6 +44,22 @@
       >
         {{ t('notAvailable') }}
       </p>
+      <ModalUi v-if="createdOrderNo">
+        <template #title>
+          {{ t('operationSuccess') }}
+        </template>
+        <template #body>
+          <p class="modal-body">
+            {{ t('orderDetails', { no: createdOrderNo}) }}
+            <BtnBuy
+              :btn-text="t('gotoHome')"
+              :in-basket="true"
+              class="mt-12"
+              @clicked="router.push({ name: `home__${locale}` })"
+            />
+          </p>
+        </template>
+      </ModalUi>
     </div>
     <div
       v-else
@@ -66,6 +82,8 @@ import IconDelete from "@/components/ui/icons/IconDelete.vue";
 import {computed, ref, watch} from "vue";
 import { createOrder, getNewOrderNo} from "@/services/orders.service.js";
 import { useUserStore } from "@/store/user.js";
+import ModalUi from "@/components/ui/ModalUi.vue";
+import { useRouter } from "vue-router";
 
 const { t, locale } = useI18n({
   messages: {
@@ -75,6 +93,9 @@ const { t, locale } = useI18n({
       order: 'Make order',
       isEmpty: 'Basket is empty',
       notAvailable: 'Selected quantity of good is missed on stock',
+      operationSuccess: 'Ordering is successful',
+      orderDetails: 'Your order No: {no}',
+      gotoHome: 'Go to home page',
     },
     uk: {
       basket: 'Кошик',
@@ -82,13 +103,18 @@ const { t, locale } = useI18n({
       order: 'Зробити замовлення',
       isEmpty: 'Кошик порожній',
       notAvailable: 'Обрана кількість товару відсутня на складі',
+      operationSuccess: 'Замовлення створено',
+      orderDetails: 'Номер Вашого замовлення {no}',
+      gotoHome: 'Перейти на головну',
     }
   }
 })
 const basketStore = useBasketStore()
 const userStore = useUserStore()
+const router = useRouter()
 const basket = ref(basketStore.userBasket.map((item) => { return { ...item, isAvailable: true }}))
 const missedGoods = computed(() => basket.value.some((item) => item.isAvailable === false))
+const createdOrderNo = ref(0)
 
 watch(
   () => basketStore.userBasket.value,
@@ -138,6 +164,7 @@ const handleCreateOrder= async() => {
     })
   }
   else {
+    createdOrderNo.value = result.orderNo
     basketStore.clearBasket()
   }
 }
@@ -162,7 +189,7 @@ const handleCreateOrder= async() => {
   &__item {
     @apply flex flex-row justify-start items-center;
     @apply text-lg text-gray-800 w-full px-4;
-    @apply border-b-2 border-gray-300 py-2;
+    @apply border-b-2 border-gray-300 pt-2 pb-3;
 
     &-image {
       @apply w-24 h-24 mr-4 rounded-md shadow-lg;
@@ -181,5 +208,10 @@ const handleCreateOrder= async() => {
   &__missed {
     @apply bg-red-600 text-white text-base mt-4 p-2 rounded-lg self-center;
   }
+}
+.modal-body {
+  @apply text-lg text-gray-800 text-center my-4;
+  @apply px-4 py-2;
+  @apply flex flex-col justify-center items-center;
 }
 </style>
