@@ -25,13 +25,13 @@
         >{{ basketCount }}
         </span>
       </RouterLink>
-      <RouterLink to="/cabinet">
+      <RouterLink :to="{ name: `cabinet__${locale}` }">
         <IconUser
           :class="iconUserColor"
           class="menu-icon"
         />
       </RouterLink>
-      <RouterLink to="/cabinet">
+      <RouterLink :to="{ name: `admin__${locale}` }">
         <IconSettings
           v-if="isAdmin"
           class="menu-icon text-menu-text"

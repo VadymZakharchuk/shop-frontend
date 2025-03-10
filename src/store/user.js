@@ -41,6 +41,9 @@ export const useUserStore = defineStore('initStore', {
       if (this.isLoggedInAndHasToken) {
         await removeFav({ userId: this.user.id, productId: id })
       }
-    }
+    },
+    clearUser() {
+      this.user = {}
+    },
   }
 })

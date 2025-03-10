@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from "@/store/user.js"
-import { useBasketStore } from "@/store/basket.js";
 import { jwtDecode } from "jwt-decode"
 import Cookies from 'js-cookie'
 import Home from "@/pages/HomePage.vue"
@@ -13,6 +12,7 @@ const ProductPage = () => import('@/pages/ProductPage.vue')
 const ProductDetails = () => import('@/pages/ProductDetails.vue')
 const UserCabinet = () => import('@/pages/UserCabinet.vue')
 const UserBasket = () => import('@/pages/UserBasket.vue')
+const AdminPage = () => import('@/pages/AdminPanel.vue')
 
 const routes = [
   {
@@ -54,6 +54,14 @@ const routes = [
   {
     path: '/basket', component: DefaultLayout,
     children: [{ path: '', name: 'basket__en', component: UserBasket }],
+  },
+  {
+    path: '/admin-storinka', component: DefaultLayout,
+    children: [{ path: '', name: 'admin__uk', component: AdminPage }],
+  },
+  {
+    path: '/admin-page', component: DefaultLayout,
+    children: [{ path: '', name: 'admin__en', component: AdminPage }],
   },
   {
     path: '/rukzaky', component: DefaultLayout,
@@ -218,8 +226,11 @@ router.beforeEach((to, from, next) => {
     const decoded = jwtDecode(token)
     if (new Date() - new Date(decoded.exp * 1000) > 0) {
       Cookies.remove('auth-token')
-      token = ''
+      userStore.clearUser()
     }
+  }
+  else {
+    userStore.clearUser()
   }
 
   if (to.path.includes('cabinet') && !userStore.isLoggedInAndHasToken) next({ name: `login__${lang}` })

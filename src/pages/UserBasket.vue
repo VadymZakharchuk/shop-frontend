@@ -44,23 +44,23 @@
       >
         {{ t('notAvailable') }}
       </p>
-      <ModalUi v-if="createdOrderNo">
-        <template #title>
-          {{ t('operationSuccess') }}
-        </template>
-        <template #body>
-          <p class="modal-body">
-            {{ t('orderDetails', { no: createdOrderNo}) }}
-            <BtnBuy
-              :btn-text="t('gotoHome')"
-              :in-basket="true"
-              class="mt-12"
-              @clicked="router.push({ name: `home__${locale}` })"
-            />
-          </p>
-        </template>
-      </ModalUi>
     </div>
+    <ModalUi v-else-if="createdOrderNo">
+      <template #title>
+        {{ t('operationSuccess') }}
+      </template>
+      <template #body>
+        <p class="modal-body">
+          {{ t('orderDetails', { no: createdOrderNo}) }}
+          <BtnBuy
+            :btn-text="t('gotoHome')"
+            :in-basket="true"
+            class="mt-12"
+            @clicked="router.push({ name: `home__${locale}` })"
+          />
+        </p>
+      </template>
+    </ModalUi>
     <div
       v-else
       class="basket-page__empty"
