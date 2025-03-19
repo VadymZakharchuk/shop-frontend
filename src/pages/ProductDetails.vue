@@ -172,7 +172,7 @@ const getProductData = async () => {
     item.localPrice = toCurrencyString(item.price, locale.value)
     return { ...item }
   })
-  const token = Cookies.get('auth-token')
+  const token = userStore.token
   const decoded = token ? jwtDecode(token) : undefined
   const isAdmin = decoded ? !!decoded.isAdmin : false
   await increaseCounter(route.params.id, isAdmin)

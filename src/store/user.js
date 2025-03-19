@@ -1,17 +1,16 @@
 import { defineStore } from 'pinia'
-import Cookies from "js-cookie";
 import { addFav, removeFav } from "@/services/favourites.service.js";
 
 export const useUserStore = defineStore('initStore', {
   state: () => ({
     user: {},
+    token: '',
     favourites: [],
     rubrics: [],
   }),
   persist: true,
   getters: {
-    isLoggedInAndHasToken({ user }) {
-      const token = Cookies.get('auth-token')
+    isLoggedInAndHasToken({ user, token }) {
       return !!(user.id && token)
     },
     userFavourites({ favourites }) {
@@ -44,6 +43,7 @@ export const useUserStore = defineStore('initStore', {
     },
     clearUser() {
       this.user = {}
+      this.token = ''
     },
   }
 })

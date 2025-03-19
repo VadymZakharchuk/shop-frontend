@@ -84,8 +84,8 @@ const fetchFavourites = async () => {
     userStore.favourites = await listFavs(userStore.user.id);
   }
 };
-fetchProducts()
-fetchFavourites()
+// fetchProducts()
+// fetchFavourites()
 
 </script>
 

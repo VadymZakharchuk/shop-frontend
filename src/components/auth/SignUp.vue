@@ -20,6 +20,24 @@
       >
         <div>
           <label
+            for="email"
+            class="sign-in__form-email-label"
+          >{{ t('email') }}</label>
+          <div class="mt-2">
+            <Field
+              name="email"
+              type="text"
+              class="sign-in__form-email-field"
+              placeholder="Your email"
+              :class="{ 'is-invalid': errors.email }"
+            />
+            <div class="invalid-feedback">
+              {{ errors.email }}
+            </div>
+          </div>
+        </div>
+        <div>
+          <label
             for="phone"
             class="sign-in__form-phone-label"
           >{{ t('phoneNo') }}</label>
@@ -72,18 +90,18 @@
             :class="{'bg-indigo-600': meta.valid, 'bg-gray-200': !meta.valid}"
             class="sign-in__form__btn-submit"
           >
-            {{ t('signIn') }}
+            {{ t('signUp') }}
           </button>
         </div>
       </Form>
 
       <p class="sign-in__form__register">
-        {{ t('noAccount') }}
+        {{ t('haveAccount') }}
         <RouterLink
-          :to="{ name: `register__${locale}` }"
+          :to="{ name: `login__${locale}` }"
           class="sign-in__form__register-btn"
         >
-          {{ t('register') }}
+          {{ t('login') }}
         </RouterLink>
       </p>
     </div>
@@ -97,38 +115,41 @@ import * as Yup from 'yup';
 import { useI18n } from "vue-i18n"
 import Cookies from 'js-cookie'
 import { sha256 } from 'crypto-hash'
-import { login } from "@/services/users.service.js"
+import { register } from "@/services/users.service.js"
 import { useRouter } from "vue-router"
 import { computed } from "vue"
 
 const userStore = useUserStore();
 const router = useRouter();
-
 const { t, locale } = useI18n({
   messages: {
     en: {
-      title: "Sign in to your account",
+      title: "Registration new user",
+      email: "Your e-mail",
       phoneNo: "Your phone No",
       password: "Password",
       forgot: "Forgot password?",
-      noAccount: "Have no account?",
-      register: "Register now",
+      haveAccount: "Have an account?",
+      login: "Login page",
       requiredField: "This field is required",
+      noValidEmail: "Email address is not valid",
       noValidPhone: "Phone number is not valid",
       passwordMin: "Password must be at least 6 characters",
-      signIn: "Sign in",
+      signUp: "Sign Up",
     },
     uk: {
-      title: "Увійдіть у свій обліковий запис",
+      title: "Реєстрація нового користувача",
+      email: "Ваш e-mail",
       phoneNo: "Ваш номер телефону (XXX) XXX-XX-XX",
       password: "Пароль",
       forgot: "Забули пароль?",
-      noAccount: "Не маєте облікового запису?",
-      register: "Зареєструйтесь зараз",
+      haveAccount: "Вже маєте обліковий запис?",
+      login: "Сторінка входу",
       requiredField: "Це поле обов'язкове",
       noValidPhone: "Не валідний номер телефону",
+      noValidEmail: "Email адреса не дійсна",
       passwordMin: "Пароль повинен містити принаймні 6 символів",
-      signIn: "Увійти",
+      signUp: "Зареєструватись",
     }
   }
 });
@@ -136,6 +157,7 @@ const { t, locale } = useI18n({
 if (Cookies.get("lang")) locale.value = Cookies.get("lang");
 const phoneRegExp = /^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s./0-9]*$/g
 const schema = Yup.object({
+  email: Yup.string().email(t('noValidEmail')).required(t('requiredField')),
   phone: Yup.string().matches(phoneRegExp, t('noValidPhone')).required(t('requiredField')),
   password: Yup.string().required(t('requiredField')).min(6, t('passwordMin')),
 });
@@ -145,7 +167,8 @@ const onSubmit = async (values) => {
     ? values.phone.replace(/\D/g,'')
     : '38' + values.phone.replace(/\D/g,'');
   values.password = await sha256(values.password);
-  const { user, token } = await login(values)
+
+  const { user, token } = await register(values)
   userStore.user = { ...user }
   userStore.token = token
   if (token) {
@@ -175,6 +198,14 @@ const forgotPassword = computed(() => {
   &__form {
     @apply mt-10 sm:mx-auto sm:w-full sm:max-w-sm;
 
+    &-email-label {
+      @apply block text-sm/6 font-medium text-gray-900;
+    }
+    &-email-field {
+      @apply block w-full rounded-md bg-gray-100 px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1;
+      @apply outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2;
+      @apply focus:outline-indigo-600 sm:text-sm/6;
+    }
     &-phone-label {
       @apply block text-sm/6 font-medium text-gray-900;
     }

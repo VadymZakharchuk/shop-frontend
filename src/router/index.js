@@ -6,6 +6,7 @@ import Home from "@/pages/HomePage.vue"
 import DefaultLayout from "@/layouts/DefaultLayout.vue";
 
 const SignIn = () => import('@/components/auth/SignIn.vue')
+const SignUp = () => import('@/components/auth/SignUp.vue')
 const ForgotPassword = () => import('@/components/auth/ForgotPassword.vue')
 const SignUpLayout  =() => import('@/layouts/SignUpLayout.vue')
 const ProductPage = () => import('@/pages/ProductPage.vue')
@@ -30,6 +31,14 @@ const routes = [
   {
     path: '/login', component: SignUpLayout,
     children: [{ path: '', name: 'login__en', component: SignIn }],
+  },
+  {
+    path: '/registracia', component: SignUpLayout,
+    children: [{ path: '', name: 'register__uk', component: SignUp }],
+  },
+  {
+    path: '/signup', component: SignUpLayout,
+    children: [{ path: '', name: 'register__en', component: SignUp }],
   },
   {
     path: '/zabuv-parol', component: SignUpLayout,
@@ -221,11 +230,10 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const userStore = useUserStore()
   const lang = from.name?.includes('__uk') ? 'uk' : 'en'
-  let token = Cookies.get('auth-token')
+  let token = userStore.token
   if (token) {
     const decoded = jwtDecode(token)
     if (new Date() - new Date(decoded.exp * 1000) > 0) {
-      Cookies.remove('auth-token')
       userStore.clearUser()
     }
   }
